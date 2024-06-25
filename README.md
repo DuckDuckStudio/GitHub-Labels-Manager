@@ -5,7 +5,7 @@ GLM提供了以下几种功能:
 - [x] 获取某个仓库的所有标签，并存在指定目录的`labels.json`中
 - [x] 清空某个仓库的标签 *(需要有repo权限的token)*
 - [x] 依据指定的**json**文件设置某个仓库的标签 *(先清空指定仓库后再设置，需要有repo权限的token)*
-- [ ] 复制某个仓库的标签到另一个仓库 *(先清空指定仓库后再设置，需要有repo权限的token)*
+- [x] 复制某个仓库的标签到另一个仓库 *(先清空指定仓库后再设置，需要有repo权限的token)*
 
 ## 使用前配置
 ### Python
@@ -49,23 +49,23 @@ pip install -i https://pypi.tuna.tsinghua.edu.cn/simple -r requirements.txt
    然后再在左侧菜单上，找到并点击展开“**Personal access tokens**”（个人账户Tokens）。  
    选择“**Personal access tokens**”下的“**Tokens (classic)**”（Tokens（典型））。  
 
-4. 新建Token：
+4. 新建Token：  
    在右上角展开“**Generate new token**”（生成新的Token）。  
    选择“**Generate new token (classic)**”（生成新的Token（典型））。  
 
-5. 填写Token信息：
+5. 填写Token信息：  
    按着表格填就好。  
    Note → Token的名字，随便取，中文也行。  
    Expiration → Token存在的时间，可以选“No expiration”（不会过期）。  
    Select scopes → Token的作用域，这里需要选**repo**。  
 
-6. 生成Token：
+6. 生成Token：  
    点击最下面的绿色按钮（“Generate token”（生成Token））生成Token。  
 
-7. 复制生成的Token：
+7. 复制生成的Token：  
    *请注意，在此之后你将无法再次获取这个Token，请妥善保管Token，不要上传到公共仓库中。*  
 
-8. 将Token填入配置文件：
+8. 将Token填入配置文件：  
    将你的Token填入`config.json`中的`token`中。
 
 ## 如何获取
