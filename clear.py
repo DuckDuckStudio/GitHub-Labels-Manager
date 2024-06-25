@@ -55,9 +55,9 @@ for label in labels:
     response = requests.delete(delete_url, headers=headers)
     
     if response.status_code == 204:
-        print(f"{Fore.GREEN}✓{Fore.RESET} 标签 {Fore.BLUE}{label['name']}{Fore.BLUE} 成功删除")
+        print(f"{Fore.GREEN}✓{Fore.RESET} 标签 {Fore.BLUE}{label['name']}{Fore.RESET} 成功删除")
     else:
-        print(f"{Fore.RED}✕{Fore.RESET} 删除标签 {Fore.BLUE}{label['name']}{Fore.BLUE} 时失败: {Fore.YELLOW}{response.status_code}{Fore.RESET}\n{Fore.RED}{response.text}{Fore.RESET}")
+        print(f"{Fore.RED}✕{Fore.RESET} 删除标签 {Fore.BLUE}{label['name']}{Fore.RESET} 时失败: {Fore.YELLOW}{response.status_code}{Fore.RESET}\n{Fore.RED}{response.text}{Fore.RESET}")
         flag += 1
 
 if flag:
