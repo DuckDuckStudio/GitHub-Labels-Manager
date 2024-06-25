@@ -17,7 +17,7 @@ elif repo_url.startswith('http://'):
 
 # 检查是否是GitHub地址
 if not url.startswith('github.com/'):
-    raise ValueError("无效的链接")
+    raise ValueError(f"{Fore.RED}✕{Fore.RESET} 无效的链接")
 
 # 去除主机名部分
 url = url[len('github.com/'):]
@@ -28,7 +28,7 @@ if len(parts) >= 2:
     owner = parts[0]
     repo = parts[1]
 else:
-    raise ValueError("无效的GitHub链接")
+    raise ValueError(f"{Fore.RED}✕{Fore.RESET} 无效的GitHub链接")
 # ---
 print("请选择保存到的文件夹:", end=" ")
 
