@@ -1,7 +1,6 @@
 import requests
 import json
 import os
-import tkinter as tk
 from tkinter import filedialog
 from colorama import init, Fore
 
@@ -31,9 +30,6 @@ else:
     raise ValueError(f"{Fore.RED}✕{Fore.RESET} 无效的GitHub链接")
 # ---
 print("请选择保存到的文件夹:", end=" ")
-
-root = tk.Tk()
-root.withdraw()
 
 output_dir = filedialog.askdirectory()
 
