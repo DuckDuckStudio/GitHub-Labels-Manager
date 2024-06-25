@@ -65,3 +65,5 @@ if response.status_code == 200:
     print(f"{Fore.GREEN}✓{Fore.RESET} 标签信息已写入 {Fore.BLUE}{output}{Fore.BLUE}")
 else:
     print(f"{Fore.RED}✕{Fore.RESET} 无法获取标签，状态码: {Fore.YELLOW}{response.status_code}{Fore.RESET}")
+
+input(f"{Fore.BLUE}[!]{Fore.RESET} 按 {Fore.BLUE}Enter{Fore.RESET} 键退出...")

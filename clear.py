@@ -64,3 +64,5 @@ if flag:
     print(f"{Fore.YELLOW}⚠{Fore.RESET} 操作完成，共出现 {Fore.YELLOW}{flag}{Fore.RESET} 个失败项。")
 else:
     print(f"{Fore.GREEN}✓{Fore.RESET} 成功清除所有标签！")
+
+input(f"{Fore.BLUE}[!]{Fore.RESET} 按 {Fore.BLUE}Enter{Fore.RESET} 键退出...")
