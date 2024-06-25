@@ -1,6 +1,5 @@
 import requests
 import json
-import os
 from tkinter import filedialog
 from colorama import init, Fore
 
@@ -29,13 +28,19 @@ if len(parts) >= 2:
 else:
     raise ValueError(f"{Fore.RED}✕{Fore.RESET} 无效的GitHub链接")
 # ---
-print("请选择保存到的文件夹:", end=" ")
+print("请选择保存位置:", end=" ")
 
-output_dir = filedialog.askdirectory()
+output = filedialog.asksaveasfilename(filetypes=[
+    ("标签数据json文件", "*.json")
+])
 
-print(f"\r{Fore.GREEN}✓{Fore.RESET} 已选择保存到的文件夹: {Fore.BLUE}{output_dir}{Fore.RESET}")
-output = os.path.join(output_dir, "labels.json")
-output = os.path.normpath(output)
+if not output:
+    print(f"{Fore.RED}✕{Fore.RESET} 未选择保存位置")
+
+if not output.endswith(".json"):
+    output += ".json"
+
+print(f"\r{Fore.GREEN}✓{Fore.RESET} 已选择保存位置: {Fore.BLUE}{output}{Fore.RESET}")
 # ------------
 
 # GitHub API URL
