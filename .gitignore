@@ -162,11 +162,11 @@ cython_debug/
 #.idea/
 
 # 开发清单
-不应提交清单.md
 
 # Debug
 labels.json
 test/
+图标素材/
 
 # Releases
 version/
