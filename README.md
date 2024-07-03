@@ -34,6 +34,9 @@ python -m venv .venv
 pip install -i https://pypi.tuna.tsinghua.edu.cn/simple -r requirements.txt
 ```
 
+> [!TIP]
+> 使用winget获取的不需要弄。  
+
 ### Token
 你需要一个GitHub Token才可以运行部分功能。  
 请按照以下步骤获取GitHub Token。  
@@ -70,3 +73,21 @@ pip install -i https://pypi.tuna.tsinghua.edu.cn/simple -r requirements.txt
 
 ## 如何获取
 请[前往Releases页获取](https://github.com/DuckDuckStudio/GitHub-Labels-Manager/releases)  
+
+### 使用winget获取
+运行以下命令:  
+```powershell
+winget install DuckStudio.GitHubLabelsManager
+```
+
+## 如何使用
+运行以下命令以获取帮助:  
+```powershell
+glm --help # winget获取的
+python glm.py --help # python源码的
+```
+获取子命令的帮助:  
+```powershell
+glm <command> --help # winget获取的
+python glm.py <command> --help # python源码的
+```
