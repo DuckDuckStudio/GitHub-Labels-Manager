@@ -9,7 +9,7 @@ from colorama import init, Fore
 
 init(autoreset=True)
 
-version = "1.1"
+version = "2024.07.03.2300"
 script_path = os.path.dirname(os.path.abspath(sys.argv[0]))
 config_path = os.path.join(script_path, "config.json")
 
@@ -201,6 +201,63 @@ def clear_labels(owner, repo, token):
 
 # ---------------------------------------------------------------------------
 
+def set_labels(owner, repo, token, json_file=None):
+    if not json_file:
+        json_file = filedialog.askopenfilename(filetypes=[
+            ("标签数据json文件", "*.json"),
+            ("All files", "*.*")
+        ])
+        if not json_file:
+            print(f"{Fore.RED}✕{Fore.RESET} 未选择标签数据json文件")
+            return "cancel"
+    if not os.path.exists(json_file):
+        print(f"{Fore.RED}✕{Fore.RESET} 选择的标签数据json文件{Fore.YELLOW}不存在{Fore.RESET}")
+        return "cancel"
+    # GitHub API URL
+    url = f'https://api.github.com/repos/{owner}/{repo}/labels'
+
+    # 请求头
+    headers = {
+        'Authorization': f'token {token}',
+        'Accept': 'application/vnd.github.v3+json'
+    }
+
+    # 从JSON文件读取标签信息
+    with open(json_file, 'r', encoding='utf-8') as f:
+        labels = json.load(f)
+
+    # 遍历标签和发送请求创建或更新标签
+    for label in labels:
+        payload = {
+            'name': label['name'],
+            'description': label['description'],
+            'color': label['color']
+        }
+
+        # 尝试创建标签
+        response = requests.post(url, headers=headers, json=payload)
+        
+        if response.status_code == 201:
+            print(f"{Fore.GREEN}✓{Fore.RESET} 成功添加 {Fore.BLUE}{label['name']}{Fore.RESET} 标签")
+        elif response.status_code == 422 and 'already_exists' in response.json().get('errors', [{}])[0].get('message', ''):
+            print(f"{Fore.YELLOW}⚠{Fore.RESET} 标签 {Fore.BLUE}{label['name']}{Fore.RESET} 已经存在！是否使用json中的数据覆盖?")
+            t = input("[Y]是 [N]否: ").lower()
+            if t in ["y", "yes", "是", "更新", "覆盖"]:
+                # 如果标签已存在，尝试更新标签
+                update_url = f"{url}/{label['name']}"
+                response = requests.patch(update_url, headers=headers, json=payload)
+                if response.status_code == 200:
+                    print(f"{Fore.GREEN}✓{Fore.RESET} 成功更新标签 {Fore.BLUE}{label['name']}{Fore.RESET}")
+                else:
+                    print(f"{Fore.RED}✕{Fore.RESET} 更新标签 {Fore.BLUE}{label['name']}{Fore.RESET} 失败: {Fore.YELLOW}{response.status_code}{Fore.RESET}\n{Fore.RED}{response.text}{Fore.RESET}")
+                    return "update error"
+        else:
+            print(f"{Fore.RED}✕{Fore.RESET} 创建标签 {Fore.BLUE}{label['name']}{Fore.RESET} 失败: {Fore.YELLOW}{response.status_code}{Fore.RESET}\n{Fore.RED}{response.text}{Fore.RESET}")
+            return "error"
+    return "successful"
+
+# ---------------------------------------------------------------------------
+
 def main():
     parser = argparse.ArgumentParser(description='GitHub Labels Manager (GLM), 自动帮你复制仓库标签、获取仓库标签、清空已有标签的工具')
     subparsers = parser.add_subparsers(dest='command', required=True, help='可用命令')
@@ -214,6 +271,7 @@ def main():
     parser_set = subparsers.add_parser('set', help='设置标签')
     parser_set.add_argument('repo_url', type=str, help='GitHub仓库URL')
     parser_set.add_argument('--token', type=str, help='GitHub访问令牌')
+    parser_set.add_argument('--json', type=str, help='标签数据文件')
 
     # 命令：config
     parser_config = subparsers.add_parser('config', help='修改配置')
@@ -231,22 +289,37 @@ def main():
         # 获取功能的实现
         running_result = formatting_url(args.repo_url)
         if running_result == "url error":
-            return 1
+            return 1, running_result
         running_result = get_labels(running_result[0], running_result[1], args.save)
         if running_result in ["cancel", "get error"]:
-            return 1
-    #elif args.command == 'set':
-    #    # 设置功能的实现
-    #    running_result = formatting_url(args.repo_url)
-    #    if running_result == "url error":
-    #        return 1
-    #    running_result = 
+            return 1, running_result
+    elif args.command == 'set':
+        # 设置功能的实现
+        running_result = formatting_url(args.repo_url)
+        if running_result == "url error":
+            return 1, running_result
+        if args.token:
+            token = args.token
+        else:
+            token = read_token()
+            if token in ["error", "token error"]:
+                return 1, running_result
+        if args.json:
+            if args.json.endswith('.json'):
+                running_result = set_labels(running_result[0], running_result[1], token, args.json)
+            else:
+                print(f"{Fore.RED}✕{Fore.RESET} 指定的标签数据文件必须是json文件 (以.json结尾)")
+                return 1, running_result
+        else:
+            running_result = set_labels(running_result[0], running_result[1], token)
+        if running_result in ["cancel", "update error", "error"]:
+            return 1, running_result
     elif args.command == 'config':
         # 配置功能的实现
         if args.token:
             running_result = set_token(args.token)
             if running_result == "error":
-                return 1
+                return 1, running_result
         elif args.edit:
             # 仅使用一次且较短，不设置函数
             try:
@@ -256,27 +329,29 @@ def main():
                 print(f"{Fore.RED}✕{Fore.RESET} 无法打开配置文件: {Fore.RED}{e}{Fore.RESET}\n{Fore.BLUE}[!]{Fore.RESET} 请确认配置文件路径正确: {Fore.BLUE}{config_path}{Fore.RESET}")
         else:
             print(f"{Fore.RED}✕{Fore.RESET} 缺少配置项")
-            return 1
+            return 1, running_result
     elif args.command == 'clear':
         # 清除功能的实现
         running_result = formatting_url(args.repo_url)
         if running_result == "url error":
-            return 1
+            return 1, running_result
         if args.token:
             token = args.token
         else:
             token = read_token()
             if token in ["error", "token error"]:
-                return 1
+                return 1, running_result
         running_result = clear_labels(running_result[0], running_result[1], token)
         if running_result in ["cancel"]:
-            return 1
+            return 1, running_result
     else:
         print(f"{Fore.RED}✕{Fore.RESET} 不支持的命令")
-        return 1
-    return 0
+        return 1, "command not found"
+    return 0, None
 
 if __name__ == '__main__':
     result = main()
+    if result[0] != 0:
+        print(f"{Fore.YELLOW}⚠{Fore.RESET} 检测到程序异常退出，原因 {Fore.YELLOW}{result[1]}({result[0]}){Fore.RESET}")
     input(f"{Fore.BLUE}[!]{Fore.RESET} 按 {Fore.BLUE}Enter{Fore.RESET} 键退出...")
     sys.exit(result)
