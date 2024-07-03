@@ -69,7 +69,4 @@ pip install -i https://pypi.tuna.tsinghua.edu.cn/simple -r requirements.txt
    将你的Token填入`config.json`中的`token`中。
 
 ## 如何获取
-使用Git克隆本仓库即可。  
-```powershell
-git clone https://github.com/DuckDuckStudio/GitHub-Labels-Manager.git
-```
+请[前往Releases页获取](https://github.com/DuckDuckStudio/GitHub-Labels-Manager/releases)  
