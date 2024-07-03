@@ -9,7 +9,7 @@ from colorama import init, Fore
 
 init(autoreset=True)
 
-version = "2024.07.03.2300"
+version = "1.1"
 script_path = os.path.dirname(os.path.abspath(sys.argv[0]))
 config_path = os.path.join(script_path, "config.json")
 
@@ -380,7 +380,7 @@ def main():
             except Exception as e:
                 print(f"{Fore.RED}✕{Fore.RESET} 无法打开配置文件: {Fore.RED}{e}{Fore.RESET}\n{Fore.BLUE}[!]{Fore.RESET} 请确认配置文件路径正确: {Fore.BLUE}{config_path}{Fore.RESET}")
         elif args.version:
-            print(f"{Fore.GREEN}✓{Fore.RESET} 当前使用的版本为:\nGitHub Labels Manager v{Fore.BLUE}1.1{Fore.RESET}")
+            print(f"{Fore.GREEN}✓{Fore.RESET} 当前使用的版本为:\nGitHub Labels Manager v{Fore.BLUE}{version}{Fore.RESET}")
         else:
             print(f"{Fore.RED}✕{Fore.RESET} 缺少配置项")
             return 1, running_result
