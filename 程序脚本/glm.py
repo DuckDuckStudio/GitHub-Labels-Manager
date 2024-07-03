@@ -258,6 +258,23 @@ def set_labels(owner, repo, token, json_file=None):
 
 # ---------------------------------------------------------------------------
 
+def copy_labels(source_owner, source_repo, set_owner, set_repo, token, json_file=os.path.join(script_path, "labels-temp.json"), save=False):
+    # 调用get与set函数复制仓库标签
+    # 传入先所有者，再仓库名
+    # 先源仓库，再目标仓库，token，json_file，save
+    if get_labels(source_owner, source_repo, json_file) == "successful":
+        if set_labels(set_owner, set_repo, token, json_file) == "successful":
+            if not save:
+                try:
+                    os.remove(json_file)
+                    return "successful"
+                except Exception as e:
+                    print(f"{Fore.RED}✕{Fore.RESET} 删除临时数据文件时出错:\n{Fore.RED}{e}{Fore.RESET}")
+                    return "file error"
+    return "function not return successful"
+
+# ---------------------------------------------------------------------------
+
 def main():
     parser = argparse.ArgumentParser(description='GitHub Labels Manager (GLM), 自动帮你复制仓库标签、获取仓库标签、清空已有标签的工具')
     subparsers = parser.add_subparsers(dest='command', required=True, help='可用命令')
@@ -273,10 +290,18 @@ def main():
     parser_set.add_argument('--token', type=str, help='GitHub访问令牌')
     parser_set.add_argument('--json', type=str, help='标签数据文件')
 
+    # 命令：copy
+    parser_copy = subparsers.add_parser('copy', help='复制标签')
+    parser_copy.add_argument('source_repo_url', type=str, help='源仓库URL')
+    parser_copy.add_argument('set_repo_url', type=str, help='目标仓库URL')
+    parser_copy.add_argument('--token', type=str, help='GitHub访问令牌')
+    parser_copy.add_argument('--json', type=str, help='标签数据文件的存放位置(默认为glm所在目录下的labels-temp.json)')
+    parser_copy.add_argument('--save', help='保留获取到的标签数据文件', action='store_true')
+
     # 命令：config
     parser_config = subparsers.add_parser('config', help='修改配置')
     parser_config.add_argument('--token', type=str, help='设置GitHub访问令牌')
-    parser.add_argument('--edit', help='打开配置文件', action='store_true')
+    parser_config.add_argument('--edit', help='打开配置文件', action='store_true')
 
     # 命令：clear
     parser_clear = subparsers.add_parser('clear', help='清空标签')
@@ -313,6 +338,32 @@ def main():
         else:
             running_result = set_labels(running_result[0], running_result[1], token)
         if running_result in ["cancel", "update error", "error"]:
+            return 1, running_result
+    elif args.command == 'copy':
+        # 复制标签功能的实现
+        source_repo = formatting_url(args.source_repo_url)
+        if source_repo == "url error":
+            return 1, source_repo
+        set_repo = formatting_url(args.set_repo_url)
+        if set_repo == "url error":
+            return 1, set_repo
+        if args.token:
+            token = args.token
+        else:
+            token = read_token()
+            if token in ["error", "token error"]:
+                return 1, running_result
+        if args.json:
+            json = args.json
+            if not json.endswith(".json"):
+                json += ".json"
+            if args.save:
+                running_result = copy_labels(source_repo[0], source_repo[1], set_repo[0], set_repo[1], token, json, True)
+            else:
+                running_result = copy_labels(source_repo[0], source_repo[1], set_repo[0], set_repo[1], token, json)
+        else:
+            running_result = copy_labels(source_repo[0], source_repo[1], set_repo[0], set_repo[1], token)
+        if running_result in ["file error", "function not return successful"]:
             return 1, running_result
     elif args.command == 'config':
         # 配置功能的实现
