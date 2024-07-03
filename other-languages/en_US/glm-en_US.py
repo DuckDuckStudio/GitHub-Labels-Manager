@@ -296,7 +296,7 @@ def main():
     parser_copy.add_argument('set_repo_url', type=str, help='Target repo URL')
     parser_copy.add_argument('--token', type=str, help='GitHub Token')
     parser_copy.add_argument('--json', type=str, help='Location of the Label data json file (default: labels-temp.json in the glm directory)')
-    parser_copy.add_argument('--save', help='Reserve acquired Label data json file', action='store_true')
+    parser_copy.add_argument('--save', help='Reserve the Label data json file', action='store_true')
 
     # 命令：config
     parser_config = subparsers.add_parser('config', help='Modify the configuration of the program')
