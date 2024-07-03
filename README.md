@@ -39,6 +39,10 @@ pip install -i https://pypi.tuna.tsinghua.edu.cn/simple -r requirements.txt
 
 ### Token
 你需要一个GitHub Token才可以运行部分功能。  
+
+> [!TIP]
+> 官方文档 → [管理个人访问令牌 - GitHub 文档](https://docs.github.com/zh/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#%E5%88%9B%E5%BB%BA-personal-access-token-classic)  
+
 请按照以下步骤获取GitHub Token。  
 
 1. 登录 GitHub：  
