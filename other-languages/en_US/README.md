@@ -36,7 +36,9 @@ pip install -i https://pypi.tuna.tsinghua.edu.cn/simple -r requirements.txt
 
 ### Token
 You need a GitHub Token to run some of the features.
-Follow these steps to obtain a GitHub Token.
+> [!TIP]
+> Official Documentation → [Managing your personal access tokens - GitHub Docs](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-personal-access-token-classic)  
+Follow these steps to obtain a GitHub Token.  
 
 1. Log in to GitHub:
 Open GitHub and log into your account.
