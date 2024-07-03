@@ -334,7 +334,7 @@ def main():
             if args.json.endswith('.json'):
                 running_result = set_labels(running_result[0], running_result[1], token, args.json)
             else:
-                print(f"{Fore.RED}✕{Fore.RESET} The specified Label data file MUST be a json file (ending in.json)")
+                print(f"{Fore.RED}✕{Fore.RESET} The specified Label data file MUST be a json file (ending in .json)")
                 return 1, running_result
         else:
             running_result = set_labels(running_result[0], running_result[1], token)
