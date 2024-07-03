@@ -302,6 +302,7 @@ def main():
     parser_config = subparsers.add_parser('config', help='修改配置')
     parser_config.add_argument('--token', type=str, help='设置GitHub访问令牌')
     parser_config.add_argument('--edit', help='打开配置文件', action='store_true')
+    parser_config.add_argument('--version', help='显示GLM版本', action='store_true')
 
     # 命令：clear
     parser_clear = subparsers.add_parser('clear', help='清空标签')
@@ -378,6 +379,8 @@ def main():
                 print(f"{Fore.GREEN}✓{Fore.RESET} 已打开配置文件")
             except Exception as e:
                 print(f"{Fore.RED}✕{Fore.RESET} 无法打开配置文件: {Fore.RED}{e}{Fore.RESET}\n{Fore.BLUE}[!]{Fore.RESET} 请确认配置文件路径正确: {Fore.BLUE}{config_path}{Fore.RESET}")
+        elif args.version:
+            print(f"{Fore.GREEN}✓{Fore.RESET} 当前使用的版本为:\nGitHub Labels Manager v{Fore.BLUE}1.1{Fore.RESET}")
         else:
             print(f"{Fore.RED}✕{Fore.RESET} 缺少配置项")
             return 1, running_result
@@ -405,4 +408,4 @@ if __name__ == '__main__':
     if result[0] != 0:
         print(f"{Fore.YELLOW}⚠{Fore.RESET} 检测到程序异常退出，原因 {Fore.YELLOW}{result[1]}({result[0]}){Fore.RESET}")
     input(f"{Fore.BLUE}[!]{Fore.RESET} 按 {Fore.BLUE}Enter{Fore.RESET} 键退出...")
-    sys.exit(result)
+    sys.exit(result[0])
