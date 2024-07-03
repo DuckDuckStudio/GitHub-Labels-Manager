@@ -113,7 +113,7 @@ def get_labels(owner, repo, save):
         output += ".json"
     
     if os.path.exists(output):
-        print(f"{Fore.RED}✕{Fore.RESET} The save location is occupied!")
+        print(f"{Fore.RED}✕{Fore.RESET} The save location is being occupied!")
         return "cancel"# 返回取消状态
 
     print(f"\r{Fore.GREEN}✓{Fore.RESET} The save location has been selected: {Fore.BLUE}{output}{Fore.RESET}")
