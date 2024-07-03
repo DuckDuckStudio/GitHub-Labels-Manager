@@ -378,7 +378,7 @@ def main():
                 webbrowser.open(config_path)
                 print(f"{Fore.GREEN}✓{Fore.RESET} The configuration file has been opened.")
             except Exception as e:
-                print(f"{Fore.RED}✕{Fore.RESET} Unable to open the configuration file: {Fore.RED}{e}{Fore.RESET}\n{Fore.BLUE}[!]{Fore.RESET} 请确认配置文件路径正确: {Fore.BLUE}{config_path}{Fore.RESET}")
+                print(f"{Fore.RED}✕{Fore.RESET} Unable to open the configuration file: {Fore.RED}{e}{Fore.RESET}\n{Fore.BLUE}[!]{Fore.RESET} Please confirm that the configuration file path is correct: {Fore.BLUE}{config_path}{Fore.RESET}")
         elif args.version:
             print(f"{Fore.GREEN}✓{Fore.RESET} The current version is:\nGitHub Labels Manager v{Fore.BLUE}{version}{Fore.RESET}")
         else:
