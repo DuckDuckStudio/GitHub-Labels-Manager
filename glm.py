@@ -3,6 +3,7 @@ import sys
 import json
 import argparse
 import requests
+import webbrowser
 from tkinter import filedialog
 from colorama import init, Fore
 
@@ -206,40 +207,59 @@ def main():
 
     # 命令：get
     parser_get = subparsers.add_parser('get', help='获取标签')
-    parser_get.add_argument('github_url', type=str, help='GitHub仓库URL')
+    parser_get.add_argument('repo_url', type=str, help='GitHub仓库URL')
     parser_get.add_argument('--save', type=str, help='标签信息保存的位置')
+
+    # 命令：set
+    parser_set = subparsers.add_parser('set', help='设置标签')
+    parser_set.add_argument('repo_url', type=str, help='GitHub仓库URL')
+    parser_set.add_argument('--token', type=str, help='GitHub访问令牌')
 
     # 命令：config
     parser_config = subparsers.add_parser('config', help='修改配置')
-    parser_config.add_argument('--token', type=str, help='GitHub访问令牌')
+    parser_config.add_argument('--token', type=str, help='设置GitHub访问令牌')
+    parser.add_argument('--edit', help='打开配置文件', action='store_true')
 
     # 命令：clear
     parser_clear = subparsers.add_parser('clear', help='清空标签')
-    parser_clear.add_argument('github_url', type=str, help='GitHub仓库URL')
-    parser_config.add_argument('--token', type=str, help='GitHub访问令牌')
+    parser_clear.add_argument('repo_url', type=str, help='GitHub仓库URL')
+    parser_clear.add_argument('--token', type=str, help='GitHub访问令牌')
 
     args = parser.parse_args()
 
     if args.command == 'get':
         # 获取功能的实现
-        running_result = formatting_url(args.github_url)
+        running_result = formatting_url(args.repo_url)
         if running_result == "url error":
             return 1
         running_result = get_labels(running_result[0], running_result[1], args.save)
         if running_result in ["cancel", "get error"]:
             return 1
+    #elif args.command == 'set':
+    #    # 设置功能的实现
+    #    running_result = formatting_url(args.repo_url)
+    #    if running_result == "url error":
+    #        return 1
+    #    running_result = 
     elif args.command == 'config':
         # 配置功能的实现
         if args.token:
             running_result = set_token(args.token)
             if running_result == "error":
                 return 1
+        elif args.edit:
+            # 仅使用一次且较短，不设置函数
+            try:
+                webbrowser.open(config_path)
+                print(f"{Fore.GREEN}✓{Fore.RESET} 已打开配置文件")
+            except Exception as e:
+                print(f"{Fore.RED}✕{Fore.RESET} 无法打开配置文件: {Fore.RED}{e}{Fore.RESET}\n{Fore.BLUE}[!]{Fore.RESET} 请确认配置文件路径正确: {Fore.BLUE}{config_path}{Fore.RESET}")
         else:
             print(f"{Fore.RED}✕{Fore.RESET} 缺少配置项")
             return 1
     elif args.command == 'clear':
         # 清除功能的实现
-        running_result = formatting_url(args.github_url)
+        running_result = formatting_url(args.repo_url)
         if running_result == "url error":
             return 1
         if args.token:
