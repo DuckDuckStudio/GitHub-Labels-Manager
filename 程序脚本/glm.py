@@ -146,6 +146,7 @@ def get_labels(url, save):
     else:
         print(f"{Fore.RED}✕{Fore.RESET} 无法获取标签，返回的状态码不为200: {Fore.YELLOW}{response.status_code}{Fore.RESET}")
         return "get error"# 返回获取错误
+    return "successful"
 
 # ---------------------------------------------------------------------------
 def clear_labels(url, token):
@@ -261,10 +262,10 @@ def copy_labels(source_url, set_url, token, json_file=os.path.join(script_path, 
             if not save:
                 try:
                     os.remove(json_file)
-                    return "successful"
                 except Exception as e:
                     print(f"{Fore.RED}✕{Fore.RESET} 删除临时数据文件时出错:\n{Fore.RED}{e}{Fore.RESET}")
                     return "file error"
+            return "successful"
     return "function not return successful"
 
 # ---------------------------------------------------------------------------
