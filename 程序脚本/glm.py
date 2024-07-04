@@ -82,13 +82,15 @@ def formatting_url(url):
     if len(parts) >= 2:
         owner = parts[0]
         repo = parts[1]
-        return owner, repo
-        # 先返回 所有者 再返回 仓库名
+        # GitHub API URL
+        api_url = f'https://api.github.com/repos/{owner}/{repo}/labels'
+        return api_url
+        # 直接返回GitHub API URL
     else:
         print(f"{Fore.RED}✕{Fore.RESET} 仓库链接{Fore.YELLOW}无效{Fore.RESET}，请确保你的仓库链接正确\n{Fore.BLUE}[!]{Fore.RESET} 建议检查链接是否过度，例如以下情况:\n{Fore.GREEN}正确:{Fore.RESET} https://github.com/example/example-repo/\n{Fore.RED}错误{Fore.RESET} https://github.com/example/example-repo/labels/")
         return "url error"
 
-def get_labels(owner, repo, save):
+def get_labels(url, save):
     # 本函数有以下行为
     # 正常操作保存标签，并返回successful，错误时输出错误原因并返回具体错误信息
     # 可能返回如下错误
@@ -119,9 +121,6 @@ def get_labels(owner, repo, save):
     print(f"\r{Fore.GREEN}✓{Fore.RESET} 已选择保存位置: {Fore.BLUE}{output}{Fore.RESET}")
     # ------------
 
-    # GitHub API URL
-    url = f'https://api.github.com/repos/{owner}/{repo}/labels'
-
     # 发送请求获取所有labels
     response = requests.get(url)
 
@@ -147,9 +146,10 @@ def get_labels(owner, repo, save):
     else:
         print(f"{Fore.RED}✕{Fore.RESET} 无法获取标签，返回的状态码不为200: {Fore.YELLOW}{response.status_code}{Fore.RESET}")
         return "get error"# 返回获取错误
+    return "successful"
 
 # ---------------------------------------------------------------------------
-def clear_labels(owner, repo, token):
+def clear_labels(url, token):
     # 本函数有以下行为
     # 正常操作清空指定仓库标签，并返回successful，错误时输出错误原因并返回具体错误信息
     # 可能返回如下错误
@@ -162,9 +162,6 @@ def clear_labels(owner, repo, token):
     if not (input("[Y]确认 [N]取消 : ").lower() in ["y", "yes", "确认"]):
         print(f"{Fore.BLUE}[!]{Fore.RESET} 已取消操作")
         return "cancel"
-
-    # GitHub API URL
-    url = f'https://api.github.com/repos/{owner}/{repo}/labels'
 
     # 请求头
     headers = {
@@ -201,7 +198,7 @@ def clear_labels(owner, repo, token):
 
 # ---------------------------------------------------------------------------
 
-def set_labels(owner, repo, token, json_file=None):
+def set_labels(url, token, json_file=None):
     if not json_file:
         json_file = filedialog.askopenfilename(filetypes=[
             ("标签数据json文件", "*.json"),
@@ -213,8 +210,6 @@ def set_labels(owner, repo, token, json_file=None):
     if not os.path.exists(json_file):
         print(f"{Fore.RED}✕{Fore.RESET} 选择的标签数据json文件{Fore.YELLOW}不存在{Fore.RESET}")
         return "cancel"
-    # GitHub API URL
-    url = f'https://api.github.com/repos/{owner}/{repo}/labels'
 
     # 请求头
     headers = {
@@ -258,19 +253,19 @@ def set_labels(owner, repo, token, json_file=None):
 
 # ---------------------------------------------------------------------------
 
-def copy_labels(source_owner, source_repo, set_owner, set_repo, token, json_file=os.path.join(script_path, "labels-temp.json"), save=False):
+def copy_labels(source_url, set_url, token, json_file=os.path.join(script_path, "labels-temp.json"), save=False):
     # 调用get与set函数复制仓库标签
     # 传入先所有者，再仓库名
     # 先源仓库，再目标仓库，token，json_file，save
-    if get_labels(source_owner, source_repo, json_file) == "successful":
-        if set_labels(set_owner, set_repo, token, json_file) == "successful":
+    if get_labels(source_url, json_file) == "successful":
+        if set_labels(set_url, token, json_file) == "successful":
             if not save:
                 try:
                     os.remove(json_file)
-                    return "successful"
                 except Exception as e:
                     print(f"{Fore.RED}✕{Fore.RESET} 删除临时数据文件时出错:\n{Fore.RED}{e}{Fore.RESET}")
                     return "file error"
+            return "successful"
     return "function not return successful"
 
 # ---------------------------------------------------------------------------
@@ -316,7 +311,7 @@ def main():
         running_result = formatting_url(args.repo_url)
         if running_result == "url error":
             return 1, running_result
-        running_result = get_labels(running_result[0], running_result[1], args.save)
+        running_result = get_labels(running_result, args.save)
         if running_result in ["cancel", "get error"]:
             return 1, running_result
     elif args.command == 'set':
@@ -332,12 +327,12 @@ def main():
                 return 1, running_result
         if args.json:
             if args.json.endswith('.json'):
-                running_result = set_labels(running_result[0], running_result[1], token, args.json)
+                running_result = set_labels(running_result, token, args.json)
             else:
                 print(f"{Fore.RED}✕{Fore.RESET} 指定的标签数据文件必须是json文件 (以.json结尾)")
                 return 1, running_result
         else:
-            running_result = set_labels(running_result[0], running_result[1], token)
+            running_result = set_labels(running_result, token)
         if running_result in ["cancel", "update error", "error"]:
             return 1, running_result
     elif args.command == 'copy':
@@ -359,11 +354,11 @@ def main():
             if not json.endswith(".json"):
                 json += ".json"
             if args.save:
-                running_result = copy_labels(source_repo[0], source_repo[1], set_repo[0], set_repo[1], token, json, True)
+                running_result = copy_labels(source_repo, set_repo, token, json, True)
             else:
-                running_result = copy_labels(source_repo[0], source_repo[1], set_repo[0], set_repo[1], token, json)
+                running_result = copy_labels(source_repo, set_repo, token, json)
         else:
-            running_result = copy_labels(source_repo[0], source_repo[1], set_repo[0], set_repo[1], token)
+            running_result = copy_labels(source_repo, set_repo, token)
         if running_result in ["file error", "function not return successful"]:
             return 1, running_result
     elif args.command == 'config':
@@ -395,7 +390,7 @@ def main():
             token = read_token()
             if token in ["error", "token error"]:
                 return 1, running_result
-        running_result = clear_labels(running_result[0], running_result[1], token)
+        running_result = clear_labels(running_result, token)
         if running_result in ["cancel"]:
             return 1, running_result
     else:
