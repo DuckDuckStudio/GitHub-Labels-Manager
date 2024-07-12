@@ -402,5 +402,5 @@ if __name__ == '__main__':
     result = main()
     if result[0] != 0:
         print(f"{Fore.YELLOW}⚠{Fore.RESET} An abnormal program exit was detected，Reason: {Fore.YELLOW}{result[1]}({result[0]}){Fore.RESET}")
-    input(f"{Fore.BLUE}[!]{Fore.RESET} Press {Fore.BLUE}Enter{Fore.RESET} to exit.")
+    # 因为不会有人直接运行本程序，故不用input暂停
     sys.exit(result[0])
