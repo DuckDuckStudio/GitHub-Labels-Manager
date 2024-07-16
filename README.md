@@ -1,6 +1,6 @@
 # GitHub Labels Manager (GLM)
 
-*这个提交只是占个位置*  
+*Enjoy your day and let automation do it for you. :)*  
 
 ## 项目简介
 GLM提供了以下几种功能:  
