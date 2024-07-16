@@ -298,7 +298,7 @@ def main():
     parser_config.add_argument('--token', type=str, help='Set GitHub Token')
     parser_config.add_argument('--edit', help='Open configuration file', action='store_true')
     parser_config.add_argument('--version', help='Displays the version of GitHub Labels Manager (GLM)', action='store_true')
-    parser_config.add_argument('--show', help='显示当前配置', action='store_true')
+    parser_config.add_argument('--show', help='Show current configuration', action='store_true')
 
     # 命令：clear
     parser_clear = subparsers.add_parser('clear', help='Clear labels')
@@ -369,7 +369,7 @@ def main():
                 data = json.load(file)
                 
             token = data.get('token')
-            print(f"{Fore.GREEN}✓{Fore.RESET} 当前配置信息如下:\n  账户设置:\n    Token: {Fore.BLUE}{token}{Fore.RESET}\n  程序设置:\n    版本: {Fore.BLUE}GitHub Labels Manager v{version}{Fore.RESET}")
+            print(f"{Fore.GREEN}✓{Fore.RESET} Current configuration information:\n  Account setting:\n    Token: {Fore.BLUE}{token}{Fore.RESET}\n  Program setting:\n    Version: {Fore.BLUE}GitHub Labels Manager v{version}{Fore.RESET}")
         elif args.token:
             running_result = set_token(args.token)
             if running_result == "error":

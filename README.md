@@ -1,5 +1,7 @@
 # GitHub Labels Manager (GLM)
 
+*Enjoy your day and let automation do it for you. :)*  
+
 ## 项目简介
 GLM提供了以下几种功能:  
 - [x] 获取某个仓库的所有标签，并存在指定目录的`labels.json`中
