@@ -9,7 +9,7 @@ from colorama import init, Fore
 
 init(autoreset=True)
 
-version = "1.1"
+version = "1.2"
 script_path = os.path.dirname(os.path.abspath(sys.argv[0]))
 config_path = os.path.join(script_path, "config.json")
 
@@ -298,6 +298,7 @@ def main():
     parser_config.add_argument('--token', type=str, help='设置GitHub访问令牌')
     parser_config.add_argument('--edit', help='打开配置文件', action='store_true')
     parser_config.add_argument('--version', help='显示GLM版本', action='store_true')
+    parser_config.add_argument('--show', help='显示当前配置', action='store_true')
 
     # 命令：clear
     parser_clear = subparsers.add_parser('clear', help='清空标签')
@@ -350,20 +351,26 @@ def main():
             if token in ["error", "token error"]:
                 return 1, running_result
         if args.json:
-            json = args.json
-            if not json.endswith(".json"):
-                json += ".json"
+            json_file = args.json
+            if not json_file.endswith(".json"):
+                json_file += ".json"
             if args.save:
-                running_result = copy_labels(source_repo, set_repo, token, json, True)
+                running_result = copy_labels(source_repo, set_repo, token, json_file, True)
             else:
-                running_result = copy_labels(source_repo, set_repo, token, json)
+                running_result = copy_labels(source_repo, set_repo, token, json_file)
         else:
             running_result = copy_labels(source_repo, set_repo, token)
         if running_result in ["file error", "function not return successful"]:
             return 1, running_result
     elif args.command == 'config':
         # 配置功能的实现
-        if args.token:
+        if args.show:
+            with open(config_path, 'r') as file:
+                data = json.load(file)
+                
+            token = data.get('token')
+            print(f"{Fore.GREEN}✓{Fore.RESET} 当前配置信息如下:\n  账户设置:\n    Token: {Fore.BLUE}{token}{Fore.RESET}\n  程序设置:\n    版本: {Fore.BLUE}GitHub Labels Manager v{version}{Fore.RESET}")
+        elif args.token:
             running_result = set_token(args.token)
             if running_result == "error":
                 return 1, running_result
