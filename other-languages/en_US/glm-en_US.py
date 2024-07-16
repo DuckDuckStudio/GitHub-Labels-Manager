@@ -234,7 +234,7 @@ def set_labels(url, token, json_file=None):
         
         if response.status_code == 201:
             print(f"{Fore.GREEN}✓{Fore.RESET} The label {Fore.BLUE}{label['name']}{Fore.RESET} was added successfully.")
-        elif response.status_code == 422 and 'already_exists' in response.json().get('errors', [{}])[0].get('message', ''):
+        elif response.status_code == 422 and 'already_exists' in response:
             print(f"{Fore.YELLOW}⚠{Fore.RESET} The label {Fore.BLUE}{label['name']}{Fore.RESET} already exists! Do you want to use Label data Data of the json file overrides it?")
             t = input("[Y]Yes [N]No: ").lower()
             if t in ["y", "yes", "update", "overrides"]:
