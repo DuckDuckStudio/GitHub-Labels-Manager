@@ -95,6 +95,9 @@ pip install -i https://pypi.tuna.tsinghua.edu.cn/simple -r requirements.txt
 winget install DuckStudio.GitHubLabelsManager
 ```
 
+> [!TIP]
+> 设支持的版本号为n，则 $1.1 \leqslant n \leqslant 1.2$  
+
 ## 如何使用
 运行以下命令以获取帮助:  
 ```powershell
