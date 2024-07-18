@@ -13,8 +13,6 @@ GLM provides the following functions:
 
 ### About icon
 The current icon is for temporary use only and will be replaced if there is a formal design.  
-[Social media post critiquing something.](https://www.bilibili.com/opus/949997717411594275)  
-<!--这有点不好翻译...-->
 
 > [!TIP]
 > If you would like to design a new icon, you can send your design to <Yzcbs123@163.com>. Thank you for supporting this project!  
@@ -85,7 +83,8 @@ Follow these steps to get a GitHub Token:
    *Note: You won't be able to see this Token again, so make sure to store it securely and do not upload it to public repositories.*
 
 8. Insert the Token into your configuration file:  
-   Paste your Token into the `token` field in the `config.json`.
+   Paste your Token into the `token` field in the `config.json`.  
+   Or run `glm config --token <YOUR-TOKEN>`
 
 ## How to get the program
 Please [go to the Releases page](https://github.com/DuckDuckStudio/GitHub-Labels-Manager/releases).  

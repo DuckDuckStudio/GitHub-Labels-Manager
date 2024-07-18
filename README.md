@@ -84,7 +84,8 @@ pip install -i https://pypi.tuna.tsinghua.edu.cn/simple -r requirements.txt
    *请注意，在此之后你将无法再次获取这个Token，请妥善保管Token，不要上传到公共仓库中。*  
 
 8. 将Token填入配置文件：  
-   将你的Token填入`config.json`中的`token`中。
+   将你的Token填入`config.json`中的`token`中。  
+   或者运行`glm config --token <YOUR-TOKEN>`。
 
 ## 如何获取
 请[前往Releases页获取](https://github.com/DuckDuckStudio/GitHub-Labels-Manager/releases)  
