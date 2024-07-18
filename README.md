@@ -4,12 +4,14 @@
 
 <img alt="Banner" src="https://svg-banners.vercel.app/api?type=rainbow&text1=GitHub%20Labels%20Manager&width=800&height=400" style="text-align: center;">
 
+[中文](https://github.com/DuckDuckStudio/GitHub-Labels-Manager/blob/main/README.md) | [English](https://github.com/DuckDuckStudio/GitHub-Labels-Manager/blob/main/other-languages/en_US/README.md)  
+
 ## 项目简介
 GLM提供了以下几种功能:  
 - [x] 获取某个仓库的所有标签，并存在指定目录的`labels.json`中
 - [x] 清空某个仓库的标签 *(需要有repo权限的token)*
-- [x] 依据指定的**json**文件设置某个仓库的标签 *(先清空指定仓库后再设置，需要有repo权限的token)*
-- [x] 复制某个仓库的标签到另一个仓库 *(先清空指定仓库后再设置，需要有repo权限的token)*
+- [x] 依据指定的 **json** 文件设置某个仓库的标签 *(先清空指定仓库的标签后再设置，需要有repo权限的token)*
+- [x] 复制某个仓库的标签到另一个仓库 *(先清空指定仓库的标签后再设置，需要有repo权限的token)*
 
 ### 关于图标
 目前的图标仅作临时使用，后续如有正式设计将会替换。  
@@ -84,7 +86,8 @@ pip install -i https://pypi.tuna.tsinghua.edu.cn/simple -r requirements.txt
    *请注意，在此之后你将无法再次获取这个Token，请妥善保管Token，不要上传到公共仓库中。*  
 
 8. 将Token填入配置文件：  
-   将你的Token填入`config.json`中的`token`中。
+   将你的Token填入`config.json`中的`token`中。  
+   或者运行`glm config --token <YOUR-TOKEN>`。
 
 ## 如何获取
 请[前往Releases页获取](https://github.com/DuckDuckStudio/GitHub-Labels-Manager/releases)  
