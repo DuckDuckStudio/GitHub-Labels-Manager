@@ -115,8 +115,10 @@ def get_labels(url, save):
         output += ".json"
     
     if os.path.exists(output):
-        print(f"{Fore.RED}✕{Fore.RESET} The save location is being occupied!")
-        return "cancel"# 返回取消状态
+        print(f"{Fore.YELLOW}⚠{Fore.RESET} The save location is occupied! Whether to overwrite it? [Y/N]")
+        if input(f"{Fore.BLUE}?{Fore.RESET} [Y] Confirm [N] Cancel: ").lower() not in ["是", "覆盖", "overwrite", "y", "yes"]:
+            print(f"{Fore.BLUE}[!]{Fore.RESET} Cancelled operation.")
+            return "cancel"# 返回取消状态
 
     print(f"\r{Fore.GREEN}✓{Fore.RESET} The save location has been selected: {Fore.BLUE}{output}{Fore.RESET}")
     # ------------
@@ -382,7 +384,7 @@ def main():
             except Exception as e:
                 print(f"{Fore.RED}✕{Fore.RESET} Unable to open the configuration file: {Fore.RED}{e}{Fore.RESET}\n{Fore.BLUE}[!]{Fore.RESET} Please confirm that the configuration file path is correct: {Fore.BLUE}{config_path}{Fore.RESET}")
         elif args.version:
-            print(f"{Fore.GREEN}✓{Fore.RESET} The current version is:\nGitHub Labels Manager v{Fore.BLUE}{version}{Fore.RESET}")
+            print(f"{Fore.GREEN}✓{Fore.RESET} The current version is:\nGitHub Labels Manager v{Fore.BLUE}{version}{Fore.RESET}\nInstalled in: {Fore.BLUE}{script_path}{Fore.RESET}")
         else:
             print(f"{Fore.RED}✕{Fore.RESET} Missing configuration item.")
             return 1, running_result
