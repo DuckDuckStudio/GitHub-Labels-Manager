@@ -115,8 +115,10 @@ def get_labels(url, save):
         output += ".json"
     
     if os.path.exists(output):
-        print(f"{Fore.RED}✕{Fore.RESET} 保存位置已被占用！")
-        return "cancel"# 返回取消状态
+        print(f"{Fore.YELLOW}⚠{Fore.RESET} 保存位置已被占用！是否覆盖 [Y/N]")
+        if input(f"{Fore.BLUE}?{Fore.RESET} [Y] 覆盖 [N] 取消: ").lower() not in ["是", "覆盖", "y", "yes"]:
+            print(f"{Fore.BLUE}[!]{Fore.RESET} 已取消操作")
+            return "cancel"# 返回取消状态
 
     print(f"\r{Fore.GREEN}✓{Fore.RESET} 已选择保存位置: {Fore.BLUE}{output}{Fore.RESET}")
     # ------------
