@@ -162,6 +162,7 @@ cython_debug/
 #.idea/
 
 # 开发清单
+软著/
 
 # Debug
 labels.json
