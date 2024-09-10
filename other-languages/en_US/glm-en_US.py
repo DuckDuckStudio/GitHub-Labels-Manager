@@ -384,7 +384,7 @@ def main():
             except Exception as e:
                 print(f"{Fore.RED}✕{Fore.RESET} Unable to open the configuration file: {Fore.RED}{e}{Fore.RESET}\n{Fore.BLUE}[!]{Fore.RESET} Please confirm that the configuration file path is correct: {Fore.BLUE}{config_path}{Fore.RESET}")
         elif args.version:
-            print(f"{Fore.GREEN}✓{Fore.RESET} The current version is:\nGitHub Labels Manager v{Fore.BLUE}{version}{Fore.RESET}")
+            print(f"{Fore.GREEN}✓{Fore.RESET} The current version is:\nGitHub Labels Manager v{Fore.BLUE}{version}{Fore.RESET}\nInstalled in: {Fore.BLUE}{script_path}{Fore.RESET}")
         else:
             print(f"{Fore.RED}✕{Fore.RESET} Missing configuration item.")
             return 1, running_result

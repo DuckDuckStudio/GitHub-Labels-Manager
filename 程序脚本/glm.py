@@ -384,7 +384,7 @@ def main():
             except Exception as e:
                 print(f"{Fore.RED}✕{Fore.RESET} 无法打开配置文件: {Fore.RED}{e}{Fore.RESET}\n{Fore.BLUE}[!]{Fore.RESET} 请确认配置文件路径正确: {Fore.BLUE}{config_path}{Fore.RESET}")
         elif args.version:
-            print(f"{Fore.GREEN}✓{Fore.RESET} 当前使用的版本为:\nGitHub Labels Manager v{Fore.BLUE}{version}{Fore.RESET}")
+            print(f"{Fore.GREEN}✓{Fore.RESET} 当前使用的版本为:\nGitHub Labels Manager v{Fore.BLUE}{version}{Fore.RESET}\n安装在: {Fore.BLUE}{script_path}{Fore.RESET}")
         else:
             print(f"{Fore.RED}✕{Fore.RESET} 缺少配置项")
             return 1, running_result
