@@ -116,7 +116,7 @@ def get_labels(url, save):
     
     if os.path.exists(output):
         print(f"{Fore.YELLOW}⚠{Fore.RESET} The save location is occupied! Whether to overwrite it? [Y/N]")
-        if input(f"{Fore.BLUE}?{Fore.RESET} [Y] Confirm [N] Cancel: ").lower() not in ["是", "覆盖", "y", "yes"]:
+        if input(f"{Fore.BLUE}?{Fore.RESET} [Y] Confirm [N] Cancel: ").lower() not in ["是", "覆盖", "overwrite", "y", "yes"]:
             print(f"{Fore.BLUE}[!]{Fore.RESET} Cancelled operation.")
             return "cancel"# 返回取消状态
 
