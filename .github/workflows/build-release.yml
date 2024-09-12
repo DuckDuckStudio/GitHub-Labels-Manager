@@ -48,7 +48,7 @@ jobs:
                 del .\version\Code\en-US\glm.py
 
             - name: 配置 Inno 中文翻译
-            run: |
+              run: |
                 curl -o "C:\Program Files (x86)\Inno Setup 6\Languages\ChineseSimplified.isl" "https://raw.githubusercontent.com/jrsoftware/issrc/main/Files/Languages/Unofficial/ChineseSimplified.isl"
 
             - name: 打包中文版安装程序
