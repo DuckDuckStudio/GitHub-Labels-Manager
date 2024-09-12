@@ -106,11 +106,11 @@ winget install DuckStudio.GitHubLabelsManager
 ## 如何使用
 运行以下命令以获取帮助:  
 ```powershell
-glm --help # winget获取的
+glm --help # winget获取的/使用安装程序的
 python glm.py --help # python源码的
 ```
 获取子命令的帮助:  
 ```powershell
-glm <command> --help # winget获取的
+glm <command> --help # winget获取的/使用安装程序的
 python glm.py <command> --help # python源码的
 ```
