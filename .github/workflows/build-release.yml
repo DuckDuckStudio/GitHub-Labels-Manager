@@ -33,15 +33,6 @@ jobs:
                 tree /f
               continue-on-error: true
 
-            - name: 配置 winget
-              uses: Cyberboss/install-winget@v1
-              with:
-                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-            - name: 配置 7zip
-              run: |
-                winget list --source winget --disable-interactivity --accept-source-agreements
-
             - name: 压缩发行版
               run: |
                 7z a .\version\Release\zh-CN\GitHub-Labels-Manager-auto.zip .\version\Code\zh-CN
@@ -55,6 +46,10 @@ jobs:
                 pyinstaller --onefile -i ico.ico --distpath=.\version\Code\en-US\glm.exe --name=glm.exe .\version\Code\en-US\glm.py
                 del .\version\Code\zh-CN\glm.py
                 del .\version\Code\en-US\glm.py
+
+            - name: 配置 Inno 中文翻译
+            run: |
+                curl -o "C:\Program Files (x86)\Inno Setup 6\Languages\ChineseSimplified.isl" "https://raw.githubusercontent.com/jrsoftware/issrc/main/Files/Languages/Unofficial/ChineseSimplified.isl"
 
             - name: 打包中文版安装程序
               uses: Minionguyjpro/Inno-Setup-Action@v1.2.2
