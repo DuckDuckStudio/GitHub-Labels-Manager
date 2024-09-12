@@ -1,5 +1,7 @@
 # GitHub Labels Manager (GLM)
 
+[![Build Release](https://github.com/DuckDuckStudio/GitHub-Labels-Manager/actions/workflows/build-release.yml/badge.svg)](https://github.com/DuckDuckStudio/GitHub-Labels-Manager/actions/workflows/build-release.yml)  
+
 *Enjoy your day and let automation do it for you. :)*  
 
 <img alt="Banner" src="https://svg-banners.vercel.app/api?type=rainbow&text1=GitHub%20Labels%20Manager&width=800&height=400" style="text-align: center;">
@@ -99,7 +101,7 @@ winget install DuckStudio.GitHubLabelsManager
 ```
 
 > [!TIP]
-> 设支持的版本号为n，则 $1.1 \leqslant n \leqslant 1.2$  
+> 设支持的版本号为n，则 $1.1 \leqslant n \leqslant 1.3$  
 
 ## 如何使用
 运行以下命令以获取帮助:  
