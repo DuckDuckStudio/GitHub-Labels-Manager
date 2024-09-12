@@ -9,7 +9,7 @@ from colorama import init, Fore
 
 init(autoreset=True)
 
-version = "1.2"
+version = "1.3"
 script_path = os.path.dirname(os.path.abspath(sys.argv[0]))
 config_path = os.path.join(script_path, "config.json")
 
@@ -29,7 +29,7 @@ def read_token():
                     return "token error"
             return token
     except Exception as e:
-        print(f"{Fore.RED}✕{Fore.RESET} Error reading configuration file.")
+        print(f"{Fore.RED}✕{Fore.RESET} Error reading configuration file:\n{Fore.RED}{e}{Fore.RESET}")
         return "error"
 
 def set_token(token):
