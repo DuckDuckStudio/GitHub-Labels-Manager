@@ -1,14 +1,14 @@
 [Setup]
-AppName=GitHub 标签管理器
+AppName=GitHub Labels Manager
 AppVersion=v1.3
 VersionInfoVersion=1.3
 AppPublisher=DuckStudio
 VersionInfoCopyright=Copyright (c) 鸭鸭「カモ」
 AppPublisherURL=https://duckduckstudio.github.io/yazicbs.github.io/
 DefaultDirName={autopf}\GitHub_Labels_Manager
-DefaultGroupName=GitHub 标签管理器
+DefaultGroupName=GitHub Labels Manager
 UninstallDisplayIcon={app}\glm.exe
-OutputDir=.\version\Release\zh-CN
+OutputDir=.\version\Release\en-US
 OutputBaseFilename=GitHub_Labels_Manager_Setup_v1.3
 SetupIconFile=.\ico.ico
 LicenseFile=.\LICENSE
@@ -21,7 +21,7 @@ Name: "chinesesimplified"; MessagesFile: "compiler:Languages\ChineseSimplified.i
 Name: "japanese"; MessagesFile: "compiler:Languages\Japanese.isl"
 
 [Files]
-Source: ".\version\Code\zh-CN\*"; DestDir: "{app}"
+Source: ".\version\Code\en-US\*"; DestDir: "{app}"
 
 [Icons]
 Name: "{commonstartmenu}\Programs\GitHub Labels Manager"; Filename: "{app}\glm.exe"; WorkingDir: "{app}"

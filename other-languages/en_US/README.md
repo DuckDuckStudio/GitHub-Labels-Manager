@@ -98,7 +98,7 @@ winget install DuckStudio.GitHubLabelsManager
 ```
 
 > [!TIP]
-> If the supported version number is *n*, $1.1 \leqslant n \leqslant 1.2$  
+> If the supported version number is *n*, $1.1 \leqslant n \leqslant 1.3$  
 
 ## How to use
 Run the following command for help:  

@@ -1,0 +1,77 @@
+name: Build Release
+on:
+    release:
+        types: [published]
+    workflow_dispatch:
+
+jobs:
+    build:
+        name: 构建发行版
+        runs-on: windows-latest
+
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: 配置 Python
+              uses: actions/setup-python@v4
+              with:
+                python-version: '3.12'
+
+            - name: 安装依赖
+              run: |
+                python.exe -m pip install --upgrade pip
+                pip install pyinstaller
+                pip install -r requirements.txt
+                pip list
+
+            - name: 整理文件
+              run: |
+                robocopy ".\程序脚本" "version\Code\zh-CN" /e || echo "robocopy failed for zh-CN"
+                robocopy ".\other-languages\en_US" "version\Code\en-US" /e || echo "robocopy failed for en-US"
+                robocopy . "version\Code\zh-CN\" LICENSE || echo "robocopy failed for LICENSE zh-CN"
+                robocopy . "version\Code\en-US\" LICENSE || echo "robocopy failed for LICENSE en-US"
+                tree /f
+              continue-on-error: true
+
+            - name: 配置 winget
+              uses: Cyberboss/install-winget@v1
+              with:
+                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: 配置 7zip
+              run: |
+                winget list --source winget --disable-interactivity --accept-source-agreements
+
+            - name: 压缩发行版
+              run: |
+                7z a .\version\Release\zh-CN\GitHub-Labels-Manager-auto.zip .\version\Code\zh-CN
+                7z a .\version\Release\en-US\GitHub-Labels-Manager-auto-EN.zip .\version\Code\en-US
+                7z a .\version\Release\zh-CN\GitHub-Labels-Manager-auto.7z .\version\Code\zh-CN
+                7z a .\version\Release\en-US\GitHub-Labels-Manager-auto-EN.7z .\version\Code\en-US
+
+            - name: 打包发行版
+              run: |
+                pyinstaller --onefile -i ico.ico --distpath=.\version\Code\zh-CN\glm.exe --name=glm.exe .\version\Code\zh-CN\glm.py
+                pyinstaller --onefile -i ico.ico --distpath=.\version\Code\en-US\glm.exe --name=glm.exe .\version\Code\en-US\glm.py
+                del .\version\Code\zh-CN\glm.py
+                del .\version\Code\en-US\glm.py
+
+            - name: 打包中文版安装程序
+              uses: Minionguyjpro/Inno-Setup-Action@v1.2.2
+              with:
+                path: pack.iss
+                options: /O+
+
+            - name: 打包英文版安装程序
+              uses: Minionguyjpro/Inno-Setup-Action@v1.2.2
+              with:
+                path: packEN.iss
+                options: /O+
+
+            - name: 上传构建文件
+              uses: actions/upload-artifact@v4
+              with:
+                name: build-artifacts
+                path: |
+                    .\version\Release\zh-CN\*
+                    .\version\Release\en-US\*
