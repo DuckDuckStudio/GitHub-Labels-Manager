@@ -23,6 +23,11 @@ jobs:
           pip install pyinstaller
           pip install -r requirements.txt
           pip list
+          echo ========================================
+          $upx_url = (Invoke-WebRequest -Uri https://api.github.com/repos/upx/upx/releases/latest).Content | ConvertFrom-Json | Select-Object -ExpandProperty assets | Where-Object { $_.name -like "*win64.zip" } | Select-Object -ExpandProperty browser_download_url
+          Write-Host "[INFO] Latest UPX download URL: $upx_url"
+          Invoke-WebRequest -Uri $upx_url -OutFile "upx-latest.zip"
+          7z x "upx-latest.zip" -o"."
 
       - name: 整理文件
         run: |
