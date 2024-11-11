@@ -72,42 +72,6 @@ jobs:
 
       # ============ TEST ============
 
-      - name: 测试源码
-        run: |
-          echo ============ ZH ============
-          echo xxxxxxxxxxxx HELP xxxxxxxxxxxx
-          python "程序脚本\glm.py" --help
-          python "程序脚本\glm.py" get --help
-          python "程序脚本\glm.py" set --help
-          python "程序脚本\glm.py" copy --help
-          python "程序脚本\glm.py" config --help
-          python "程序脚本\glm.py" clear --help
-
-          echo xxxxxxxxxxxx USE xxxxxxxxxxxx
-          python "程序脚本\glm.py" get https://github.com/DuckDuckStudio/Fufu_Tools --save "labels.json"
-          Get-Content .\labels.json -Encoding UTF8
-          del .\labels.json
-
-          python "程序脚本\glm.py" config --version
-          python "程序脚本\glm.py" config --show
-
-          echo ============ EN ============
-          echo xxxxxxxxxxxx HELP xxxxxxxxxxxx
-          python "other-languages\en_US\glm.py" --help
-          python "other-languages\en_US\glm.py" get --help
-          python "other-languages\en_US\glm.py" set --help
-          python "other-languages\en_US\glm.py" copy --help
-          python "other-languages\en_US\glm.py" config --help
-          python "other-languages\en_US\glm.py" clear --help
-
-          echo xxxxxxxxxxxx USE xxxxxxxxxxxx
-          python "other-languages\en_US\glm.py" get https://github.com/DuckDuckStudio/Fufu_Tools --save "labels.json"
-          Get-Content .\labels.json -Encoding UTF8
-          del .\labels.json
-
-          python "other-languages\en_US\glm.py" config --version
-          python "other-languages\en_US\glm.py" config --show
-
       - name: 测试打包
         run: |
           echo ============ ZH ============
