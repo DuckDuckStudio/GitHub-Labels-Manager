@@ -56,17 +56,11 @@ jobs:
         run: |
           tree /f
 
-      - name: 打包中文版安装程序
-        uses: Minionguyjpro/Inno-Setup-Action@v1.2.2
-        with:
-          path: pack.iss
-          options: /O+
-
-      - name: 打包英文版安装程序
-        uses: Minionguyjpro/Inno-Setup-Action@v1.2.2
-        with:
-          path: packEN.iss
-          options: /O+
+      - name: 打包安装程序
+        run: |
+          iscc pack.iss
+          echo =======================
+          iscc packEN.iss
 
       - name: 上传构建文件
         uses: actions/upload-artifact@v4
