@@ -10,7 +10,8 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: 签出代码
+        uses: actions/checkout@v4
 
       - name: 配置 Python
         uses: actions/setup-python@v4
@@ -23,6 +24,11 @@ jobs:
           pip install pyinstaller
           pip install -r requirements.txt
           pip list
+          echo ========================================
+          $upx_url = (Invoke-WebRequest -Uri https://api.github.com/repos/upx/upx/releases/latest).Content | ConvertFrom-Json | Select-Object -ExpandProperty assets | Where-Object { $_.name -like "*win64.zip" } | Select-Object -ExpandProperty browser_download_url
+          Write-Host "[INFO] Latest UPX download URL: $upx_url"
+          Invoke-WebRequest -Uri $upx_url -OutFile "upx-latest.zip"
+          7z x "upx-latest.zip" -o"."
 
       - name: 整理文件
         run: |
@@ -31,6 +37,8 @@ jobs:
           robocopy . "version\Code\zh-CN\" LICENSE
           robocopy . "version\Code\en-US\" LICENSE
         continue-on-error: true
+
+      # ============ Compile ============
 
       - name: 压缩发行版
         run: |
@@ -54,13 +62,112 @@ jobs:
 
       - name: 验证文件
         run: |
-          tree /f
+          tree /f /a
 
       - name: 打包安装程序
         run: |
           iscc pack.iss
           echo =======================
           iscc packEN.iss
+
+      # ============ TEST ============
+
+      - name: 测试源码
+        run: |
+          echo ============ ZH ============
+          echo xxxxxxxxxxxx HELP xxxxxxxxxxxx
+          python "程序脚本\glm.py" --help
+          python "程序脚本\glm.py" get --help
+          python "程序脚本\glm.py" set --help
+          python "程序脚本\glm.py" copy --help
+          python "程序脚本\glm.py" config --help
+          python "程序脚本\glm.py" clear --help
+
+          echo xxxxxxxxxxxx USE xxxxxxxxxxxx
+          python "程序脚本\glm.py" get https://github.com/DuckDuckStudio/Fufu_Tools --save "labels.json"
+          Get-Content .\labels.json -Encoding UTF8
+          del .\labels.json
+
+          python "程序脚本\glm.py" config --version
+          python "程序脚本\glm.py" config --show
+
+          echo ============ EN ============
+          echo xxxxxxxxxxxx HELP xxxxxxxxxxxx
+          python "other-languages\en_US\glm.py" --help
+          python "other-languages\en_US\glm.py" get --help
+          python "other-languages\en_US\glm.py" set --help
+          python "other-languages\en_US\glm.py" copy --help
+          python "other-languages\en_US\glm.py" config --help
+          python "other-languages\en_US\glm.py" clear --help
+
+          echo xxxxxxxxxxxx USE xxxxxxxxxxxx
+          python "other-languages\en_US\glm.py" get https://github.com/DuckDuckStudio/Fufu_Tools --save "labels.json"
+          Get-Content .\labels.json -Encoding UTF8
+          del .\labels.json
+
+          python "other-languages\en_US\glm.py" config --version
+          python "other-languages\en_US\glm.py" config --show
+
+      - name: 测试打包
+        run: |
+          echo ============ ZH ============
+          echo xxxxxxxxxxxx HELP xxxxxxxxxxxx
+          & "version\Code\zh-CN\glm.exe" --help
+          & "version\Code\zh-CN\glm.exe" get --help
+          & "version\Code\zh-CN\glm.exe" set --help
+          & "version\Code\zh-CN\glm.exe" copy --help
+          & "version\Code\zh-CN\glm.exe" config --help
+          & "version\Code\zh-CN\glm.exe" clear --help
+      
+          echo xxxxxxxxxxxx USE xxxxxxxxxxxx
+          & "version\Code\zh-CN\glm.exe" get https://github.com/DuckDuckStudio/Fufu_Tools --save "labels.json"
+          Get-Content .\labels.json -Encoding UTF8
+          del .\labels.json
+      
+          & "version\Code\zh-CN\glm.exe" config --version
+          & "version\Code\zh-CN\glm.exe" config --show
+      
+          echo ============ EN ============
+          echo xxxxxxxxxxxx HELP xxxxxxxxxxxx
+          & "version\Code\zh-CN\glm.exe" --help
+          & "version\Code\zh-CN\glm.exe" get --help
+          & "version\Code\zh-CN\glm.exe" set --help
+          & "version\Code\zh-CN\glm.exe" copy --help
+          & "version\Code\zh-CN\glm.exe" config --help
+          & "version\Code\zh-CN\glm.exe" clear --help
+      
+          echo xxxxxxxxxxxx USE xxxxxxxxxxxx
+          & "version\Code\zh-CN\glm.exe" get https://github.com/DuckDuckStudio/Fufu_Tools --save "labels.json"
+          Get-Content .\labels.json -Encoding UTF8
+          del .\labels.json
+      
+          & "version\Code\zh-CN\glm.exe" config --version
+          & "version\Code\zh-CN\glm.exe" config --show
+
+      - name: 测试安装程序-INSTALL
+        run: |
+          & "version\Release\zh-CN\GitHub_Labels_Manager_Setup_v1.4.exe" /verysilent /suppressmsgboxes
+      
+      - name: 测试安装程序-RUN
+        run: |
+          echo ============ ZH ============
+          echo xxxxxxxxxxxx HELP xxxxxxxxxxxx
+          glm --help
+          glm get --help
+          glm set --help
+          glm copy --help
+          glm config --help
+          glm clear --help
+  
+          echo xxxxxxxxxxxx USE xxxxxxxxxxxx
+          glm get https://github.com/DuckDuckStudio/Fufu_Tools --save "labels.json"
+          Get-Content .\labels.json -Encoding UTF8
+          del .\labels.json
+  
+          glm config --version
+          glm config --show
+
+      # ============ Upload ============
 
       - name: 上传构建文件
         uses: actions/upload-artifact@v4
