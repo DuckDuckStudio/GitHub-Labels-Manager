@@ -167,6 +167,7 @@ cython_debug/
 # Debug
 labels.json
 test/
+test.*
 图标素材/
 
 # Releases

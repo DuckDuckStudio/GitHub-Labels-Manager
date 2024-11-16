@@ -9,7 +9,7 @@ from colorama import init, Fore
 
 init(autoreset=True)
 
-version = "1.3"
+version = "1.4"
 script_path = os.path.dirname(os.path.abspath(sys.argv[0]))
 config_path = os.path.join(script_path, "config.json")
 
@@ -236,7 +236,7 @@ def set_labels(url, token, json_file=None):
         
         if response.status_code == 201:
             print(f"{Fore.GREEN}✓{Fore.RESET} The label {Fore.BLUE}{label['name']}{Fore.RESET} was added successfully.")
-        elif response.status_code == 422:
+        elif response.status_code == 422 and "already_exists" in response.json():
             print(f"{Fore.YELLOW}⚠{Fore.RESET} The label {Fore.BLUE}{label['name']}{Fore.RESET} already exists! Do you want to use Label data Data of the json file overrides it?")
             t = input("[Y]Yes [N]No: ").lower()
             if t in ["y", "yes", "update", "overrides"]:
@@ -248,6 +248,9 @@ def set_labels(url, token, json_file=None):
                 else:
                     print(f"{Fore.RED}✕{Fore.RESET} Failed to update the label {Fore.BLUE}{label['name']}{Fore.RESET}: {Fore.YELLOW}{response.status_code}{Fore.RESET}\n{Fore.RED}{response.text}{Fore.RESET}")
                     return "update error"
+        elif response.status_code == 401 and "Bad credentials" in response.json():
+            print(f"{Fore.RED}✕{Fore.RESET} Failed to create label {Fore.BLUE}{label['name']}{Fore.RESET}: {Fore.YELLOW}{response.status_code}{Fore.RESET}\n{Fore.RED}{response.text}{Fore.RESET}\n{Fore.BLUE}[!]{Fore.RESET} This is most likely because {Fore.YELLOW}your token is expired or invalid{Fore.RESET}, please check if your token is valid\n{Fore.BLUE}[!]{Fore.RESET} You can update the currently set token using the {Fore.GREEN}glm config --token <YOUR_TOKEN>{Fore.RESET} command")
+            return "error"
         else:
             print(f"{Fore.RED}✕{Fore.RESET} Failed to create label {Fore.BLUE}{label['name']}{Fore.RESET}: {Fore.YELLOW}{response.status_code}{Fore.RESET}\n{Fore.RED}{response.text}{Fore.RESET}")
             return "error"
@@ -371,7 +374,7 @@ def main():
                 data = json.load(file)
                 
             token = data.get('token')
-            print(f"{Fore.GREEN}✓{Fore.RESET} Current configuration information:\n  Account setting:\n    Token: {Fore.BLUE}{token}{Fore.RESET}\n  Program setting:\n    Version: {Fore.BLUE}GitHub Labels Manager v{version}{Fore.RESET}")
+            print(f"{Fore.GREEN}✓{Fore.RESET} Current configuration information:\n  Account configuration:\n    Token: {Fore.BLUE}{token}{Fore.RESET}\n  Program configuration:\n    Version: {Fore.BLUE}GitHub Labels Manager v{version} by 鸭鸭「カモ」{Fore.RESET}\n      Installed in: {Fore.BLUE}{script_path}{Fore.RESET}")
         elif args.token:
             running_result = set_token(args.token)
             if running_result == "error":
