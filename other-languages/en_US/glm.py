@@ -236,7 +236,7 @@ def set_labels(url, token, json_file=None):
         
         if response.status_code == 201:
             print(f"{Fore.GREEN}✓{Fore.RESET} The label {Fore.BLUE}{label['name']}{Fore.RESET} was added successfully.")
-        elif response.status_code == 422 and "already_exists" in response.json():
+        elif response.status_code == 422 and "already_exists" in response.text:
             print(f"{Fore.YELLOW}⚠{Fore.RESET} The label {Fore.BLUE}{label['name']}{Fore.RESET} already exists! Do you want to use Label data Data of the json file overrides it?")
             t = input("[Y]Yes [N]No: ").lower()
             if t in ["y", "yes", "update", "overrides"]:
@@ -248,7 +248,7 @@ def set_labels(url, token, json_file=None):
                 else:
                     print(f"{Fore.RED}✕{Fore.RESET} Failed to update the label {Fore.BLUE}{label['name']}{Fore.RESET}: {Fore.YELLOW}{response.status_code}{Fore.RESET}\n{Fore.RED}{response.text}{Fore.RESET}")
                     return "update error"
-        elif response.status_code == 401 and "Bad credentials" in response.json():
+        elif response.status_code == 401 and "Bad credentials" in response.text:
             print(f"{Fore.RED}✕{Fore.RESET} Failed to create label {Fore.BLUE}{label['name']}{Fore.RESET}: {Fore.YELLOW}{response.status_code}{Fore.RESET}\n{Fore.RED}{response.text}{Fore.RESET}\n{Fore.BLUE}[!]{Fore.RESET} This is most likely because {Fore.YELLOW}your token is expired or invalid{Fore.RESET}, please check if your token is valid\n{Fore.BLUE}[!]{Fore.RESET} You can update the currently set token using the {Fore.GREEN}glm config --token <YOUR_TOKEN>{Fore.RESET} command")
             return "error"
         else:

@@ -236,7 +236,7 @@ def set_labels(url, token, json_file=None):
         
         if response.status_code == 201:
             print(f"{Fore.GREEN}✓{Fore.RESET} 成功添加 {Fore.BLUE}{label['name']}{Fore.RESET} 标签")
-        elif response.status_code == 422 and "already_exists" in response.json():
+        elif response.status_code == 422 and "already_exists" in response.text:
             print(f"{Fore.YELLOW}⚠{Fore.RESET} 标签 {Fore.BLUE}{label['name']}{Fore.RESET} 已经存在！是否使用json中的数据覆盖?")
             t = input("[Y]是 [N]否: ").lower()
             if t in ["y", "yes", "是", "更新", "覆盖"]:
@@ -248,7 +248,7 @@ def set_labels(url, token, json_file=None):
                 else:
                     print(f"{Fore.RED}✕{Fore.RESET} 更新标签 {Fore.BLUE}{label['name']}{Fore.RESET} 失败: {Fore.YELLOW}{response.status_code}{Fore.RESET}\n{Fore.RED}{response.text}{Fore.RESET}")
                     return "update error"
-        elif response.status_code == 401 and "Bad credentials" in response.json():
+        elif response.status_code == 401 and "Bad credentials" in response.text:
             print(f"{Fore.RED}✕{Fore.RESET} 创建标签 {Fore.BLUE}{label['name']}{Fore.RESET} 失败: {Fore.YELLOW}{response.status_code}{Fore.RESET}\n{Fore.RED}{response.text}{Fore.RESET}\n{Fore.BLUE}[!]{Fore.RESET} 这很有可能是因为你的 {Fore.YELLOW}Token 过期或无效{Fore.RESET} ，请检查你的 Token 是否有效\n{Fore.BLUE}[!]{Fore.RESET} 你可以使用 {Fore.GREEN}glm config --token <你的_TOKEN>{Fore.RESET} 命令来更新当前设置的 Token")
             return "error"
         else:
