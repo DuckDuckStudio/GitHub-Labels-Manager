@@ -1,7 +1,7 @@
 [Setup]
 AppName=GitHub 标签管理器
-AppVersion=v1.4
-VersionInfoVersion=1.4
+AppVersion=1.5
+VersionInfoVersion=1.5
 AppPublisher=DuckStudio
 VersionInfoCopyright=Copyright (c) 鸭鸭「カモ」
 AppPublisherURL=https://duckduckstudio.github.io/yazicbs.github.io/
@@ -9,7 +9,7 @@ DefaultDirName={autopf}\GitHub_Labels_Manager
 DefaultGroupName=GitHub 标签管理器
 UninstallDisplayIcon={app}\glm.exe
 OutputDir=.\version\Release\zh-CN
-OutputBaseFilename=GitHub_Labels_Manager_Setup_v1.4
+OutputBaseFilename=GitHub_Labels_Manager_Setup_v1.5
 SetupIconFile=.\ico.ico
 LicenseFile=.\LICENSE
 Compression=lzma2
