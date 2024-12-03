@@ -3,61 +3,74 @@ import sys
 import json
 import argparse
 import requests
+import win32cred
 import webbrowser
+import pywintypes
 from tkinter import filedialog
 from colorama import init, Fore
 
 init(autoreset=True)
 
-version = "1.5"
+version = "1.6"
 script_path = os.path.dirname(os.path.abspath(sys.argv[0]))
 config_path = os.path.join(script_path, "config.json")
 
 # -----------------------------------------------------------------------------------------------------
 
 def read_token():
+    # 凭据 github-access-token.glm
     try:
-        with open(config_path, 'r') as file:
-            data = json.load(file)
-            token = data.get('token')
-            if not token.startswith('ghp_'):
-                print(f"{Fore.YELLOW}⚠{Fore.RESET} 请确认Token是否正确")
-                try:
-                    input(f"按{Fore.BLUE}Enter{Fore.RESET}键确认，按{Fore.BLUE}Ctrl + C{Fore.RESET}键取消...")
-                except KeyboardInterrupt:
-                    print(f"{Fore.BLUE}[!]{Fore.RESET} 已取消操作")
-                    return "token error"
-            return token
+        token = win32cred.CredRead("github-access-token.glm", win32cred.CRED_TYPE_GENERIC)
+        return token['CredentialBlob'].decode()
+    except pywintypes.error as e:
+        print(f"{Fore.YELLOW}⚠{Fore.RESET} 你可能还没设置Token, 请尝试使用以下命令设置Token:\n    glm config --token <YOUR-TOKEN>\n")
+        return "error"
     except Exception as e:
-        print(f"{Fore.RED}✕{Fore.RESET} 读取配置文件时出错:\n{Fore.RED}{e}{Fore.RESET}")
+        print(f"{Fore.RED}✕{Fore.RESET} 读取Token时出错:\n{Fore.RED}{e}{Fore.RESET}")
         return "error"
 
 def set_token(token):
-    try:
-        # --- Token 检查 ---
-        if not token.startswith('ghp_'):
-            print(f"{Fore.YELLOW}⚠{Fore.RESET} 请确认Token是否正确")
-            try:
-                input(f"按{Fore.BLUE}Enter{Fore.RESET}键确认，按{Fore.BLUE}Ctrl + C{Fore.RESET}键取消...")
-            except KeyboardInterrupt:
-                print(f"{Fore.BLUE}[!]{Fore.RESET} 已取消操作")
-                return "error"
-        # -----------------
+    # 凭据 github-access-token.glm
+    # == 移除 ==
+    if token == "remove":
+        print(f"{Fore.YELLOW}⚠{Fore.RESET} 确定要移除设置的Token?")
+        try:
+            input(f"按{Fore.BLUE}Enter{Fore.RESET}键确认，按{Fore.BLUE}Ctrl + C{Fore.RESET}键取消...")
+            win32cred.CredDelete("github-access-token.glm", win32cred.CRED_TYPE_GENERIC)
+            print(f"{Fore.GREEN}✓{Fore.RESET} 成功移除设置的Token")
+            return "successful"
+        except KeyboardInterrupt:
+            print(f"{Fore.BLUE}[!]{Fore.RESET} 已取消操作")
+            return "error"
+        except Exception as e:
+            print(f"{Fore.RED}✕{Fore.RESET} 移除设置的Token时出错:\n{Fore.RED}{e}{Fore.RESET}\n")
+            return "error"
 
-        # 读取现有的 JSON 文件
-        with open(config_path, 'r') as file:
-            data = json.load(file)
-        
-        # 更新 token 字段
-        data['token'] = token
-        
-        # 将更新后的 JSON 写回文件
-        with open(config_path, 'w') as file:
-            json.dump(data, file, indent=4)
+    # == 添加 ==
+    # --- Token 检查 ---
+    if not token.startswith('ghp_'):
+        print(f"{Fore.YELLOW}⚠{Fore.RESET} 请确认Token是否正确")
+        try:
+            input(f"按{Fore.BLUE}Enter{Fore.RESET}键确认，按{Fore.BLUE}Ctrl + C{Fore.RESET}键取消...")
+        except KeyboardInterrupt:
+            print(f"{Fore.BLUE}[!]{Fore.RESET} 已取消操作")
+            return "error"
+    # -----------------
+
+    cred = {
+        'Type': win32cred.CRED_TYPE_GENERIC,
+        'TargetName': "github-access-token.glm",
+        'UserName': "github-access-token",
+        'CredentialBlob': token,
+        'Persist': win32cred.CRED_PERSIST_ENTERPRISE
+    }
+    
+    try:
+        win32cred.CredWrite(cred, 0)
         print(f"{Fore.GREEN}✓{Fore.RESET} 成功更新Token")
         return "successful"
     except Exception as e:
-        print(f"{Fore.RED}✕{Fore.RESET} 处理配置文件时出错:\n{Fore.RED}{e}{Fore.RESET}\n")
+        print(f"{Fore.RED}✕{Fore.RESET} 更新Token时出错:\n{Fore.RED}{e}{Fore.RESET}\n")
         return "error"
 
 def formatting_url(url):
@@ -372,9 +385,13 @@ def main():
         if args.show:
             with open(config_path, 'r') as file:
                 data = json.load(file)
-                
-            token = data.get('token')
-            print(f"{Fore.GREEN}✓{Fore.RESET} 当前配置信息如下:\n  账户设置:\n    Token: {Fore.BLUE}{token}{Fore.RESET}\n  程序设置:\n    版本: {Fore.BLUE}GitHub Labels Manager v{version} by 鸭鸭「カモ」{Fore.RESET}\n      安装在: {Fore.BLUE}{script_path}{Fore.RESET}")
+
+            if read_token() != 'error':
+                token = f"{Fore.GREEN}已设置{Fore.RESET}"
+            else:
+                token = f"{Fore.YELLOW}未设置或读取出错{Fore.RESET}"
+
+            print(f"{Fore.GREEN}✓{Fore.RESET} 当前配置信息如下:\n  账户设置:\n    Token: {token}\n  程序设置:\n    版本: {Fore.BLUE}GitHub Labels Manager v{version} by 鸭鸭「カモ」{Fore.RESET}\n      安装在: {Fore.BLUE}{script_path}{Fore.RESET}")
         elif args.token:
             running_result = set_token(args.token)
             if running_result == "error":
