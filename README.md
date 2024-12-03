@@ -44,9 +44,11 @@ Python 3.12.0
 # 创建虚拟环境
 python -m venv .venv
 # 激活虚拟环境
-.venv\Scripts\Activate.ps1
+& ".venv\Scripts\Activate.ps1"
+
 # 安装所需库
-pip install -i https://pypi.tuna.tsinghua.edu.cn/simple -r requirements.txt
+pip install -r requirements.txt
+# TIP: 镜像源 -i https://pypi.tuna.tsinghua.edu.cn/simple
 ```
 
 > [!TIP]
@@ -58,7 +60,7 @@ pip install -i https://pypi.tuna.tsinghua.edu.cn/simple -r requirements.txt
 > [!TIP]
 > 官方文档 → [管理个人访问令牌 - GitHub 文档](https://docs.github.com/zh/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#%E5%88%9B%E5%BB%BA-personal-access-token-classic)  
 
-请按照以下步骤获取GitHub Token。  
+请按照以下步骤设置GitHub Token。  
 
 1. 登录 GitHub：  
    打开 GitHub 并登录到您的账户。  
@@ -87,9 +89,12 @@ pip install -i https://pypi.tuna.tsinghua.edu.cn/simple -r requirements.txt
 7. 复制生成的Token：  
    *请注意，在此之后你将无法再次获取这个Token，请妥善保管Token，不要上传到公共仓库中。*  
 
-8. 将Token填入配置文件：  
-   将你的Token填入`config.json`中的`token`中。  
-   或者运行`glm config --token <YOUR-TOKEN>`。
+8. 设置glm中的GitHub Token：  
+   运行`glm config --token <YOUR-TOKEN>`。
+
+> [!TIP]
+> 自1.6版本起，你可以使用`glm config --token remove`移除设置的Token。  
+> 更新Token的命令和设置Token时的一样。  
 
 ## 如何获取
 请[前往Releases页获取](https://github.com/DuckDuckStudio/GitHub-Labels-Manager/releases)  
@@ -101,7 +106,7 @@ winget install DuckStudio.GitHubLabelsManager
 ```
 
 > [!TIP]
-> 设支持的版本号为n，则 $1.1 \leqslant n \leqslant 1.3$  
+> 设支持的版本号为n，则 $1.1 \leqslant n \leqslant 1.4$  
 
 ## 如何使用
 运行以下命令以获取帮助:  
