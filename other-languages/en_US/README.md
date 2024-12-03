@@ -44,12 +44,13 @@ After cd into the project directory, run the following command:
 python -m venv .venv
 # Activate the virtual environment
 .venv\Scripts\Activate.ps1
+
 # Install required libraries
 pip install -r requirements.txt
 ```
 
 > [!TIP]
-> Programs obtained using winget do not need to set this.  
+> Programs obtained using _winget_ do not need to set this.  
 
 ### Token
 You need a GitHub Token to run some of the features.  
@@ -57,7 +58,7 @@ You need a GitHub Token to run some of the features.
 > [!TIP]
 > Official document → [Managing your personal access tokens - GitHub Docs](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#%E5%88%9B%E5%BB%BA-personal-access-token-classic)  
 
-Follow these steps to get a GitHub Token:  
+Follow these steps to set a GitHub Token:  
 
 1. Sign in to GitHub:  
    Open GitHub and sign in to your account.
@@ -86,9 +87,12 @@ Follow these steps to get a GitHub Token:
 7. Copy the generated Token:  
    *Note: You won't be able to see this Token again, so make sure to store it securely and do not upload it to public repositories.*
 
-8. Insert the Token into your configuration file:  
-   Paste your Token into the `token` field in the `config.json`.  
-   Or run `glm config --token <YOUR-TOKEN>`
+8. Set GitHub Token in glm:  
+   Run `glm config --token <YOUR-TOKEN>`
+
+> [!TIP]
+> Since version 1.6, you can use `glm config --token remove` to remove a set Token.  
+> The command for updating the Token is the same as that for setting the Token.  
 
 ## How to get the program
 Please [go to the Releases page](https://github.com/DuckDuckStudio/GitHub-Labels-Manager/releases).  
@@ -100,7 +104,7 @@ winget install DuckStudio.GitHubLabelsManager
 ```
 
 > [!TIP]
-> If the supported version number is *n*, $1.1 \leqslant n \leqslant 1.3$  
+> If the supported version number is *n*, $1.1 \leqslant n \leqslant 1.4$  
 
 ## How to use
 Run the following command for help:  
