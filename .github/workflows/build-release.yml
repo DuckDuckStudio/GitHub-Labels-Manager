@@ -46,9 +46,9 @@ jobs:
 
       - name: 打包发行版
         run: |
-          pyinstaller --onefile -i ico.ico --distpath=.\version\Code\zh-CN --name=glm.exe .\version\Code\zh-CN\glm.py
+          pyinstaller --onefile -i ico.ico --distpath=.\version\Code\zh-CN --name=glm.exe .\version\Code\zh-CN\glm.py --hiddenimport win32timezone
           echo ======================================
-          pyinstaller --onefile -i ico.ico --distpath=.\version\Code\en-US --name=glm.exe .\version\Code\en-US\glm.py
+          pyinstaller --onefile -i ico.ico --distpath=.\version\Code\en-US --name=glm.exe .\version\Code\en-US\glm.py --hiddenimport win32timezone
           echo ======================================
           del .\version\Code\zh-CN\glm.py
           del .\version\Code\en-US\glm.py
