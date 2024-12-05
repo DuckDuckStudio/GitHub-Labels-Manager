@@ -172,3 +172,7 @@ test.*
 
 # Releases
 version/
+
+# IDE
+.vs/
+.vscode/
