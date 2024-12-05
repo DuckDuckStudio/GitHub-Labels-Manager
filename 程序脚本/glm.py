@@ -1,17 +1,16 @@
 import os
 import sys
 import json
+import keyring
 import argparse
 import requests
-import win32cred
 import webbrowser
-import pywintypes
 from tkinter import filedialog
 from colorama import init, Fore
 
 init(autoreset=True)
 
-version = "1.6"
+version = "1.7"
 script_path = os.path.dirname(os.path.abspath(sys.argv[0]))
 config_path = os.path.join(script_path, "config.json")
 
@@ -20,11 +19,12 @@ config_path = os.path.join(script_path, "config.json")
 def read_token():
     # 凭据 github-access-token.glm
     try:
-        token = win32cred.CredRead("github-access-token.glm", win32cred.CRED_TYPE_GENERIC)
-        return token['CredentialBlob'].decode()
-    except pywintypes.error as e:
-        print(f"{Fore.YELLOW}⚠{Fore.RESET} 你可能还没设置Token, 请尝试使用以下命令设置Token:\n    glm config --token <YOUR-TOKEN>\n")
-        return "error"
+        token = keyring.get_password("github-access-token.glm", "github-access-token")
+        if token == None:
+            print(f"{Fore.YELLOW}⚠{Fore.RESET} 你可能还没设置Token, 请尝试使用以下命令设置Token:\n    glm config --token <YOUR-TOKEN>\n")
+            return "error"
+        # else:
+        return token
     except Exception as e:
         print(f"{Fore.RED}✕{Fore.RESET} 读取Token时出错:\n{Fore.RED}{e}{Fore.RESET}")
         return "error"
@@ -36,7 +36,7 @@ def set_token(token):
         print(f"{Fore.YELLOW}⚠{Fore.RESET} 确定要移除设置的Token?")
         try:
             input(f"按{Fore.BLUE}Enter{Fore.RESET}键确认，按{Fore.BLUE}Ctrl + C{Fore.RESET}键取消...")
-            win32cred.CredDelete("github-access-token.glm", win32cred.CRED_TYPE_GENERIC)
+            keyring.delete_password("github-access-token.glm", "github-access-token")
             print(f"{Fore.GREEN}✓{Fore.RESET} 成功移除设置的Token")
             return "successful"
         except KeyboardInterrupt:
@@ -57,16 +57,8 @@ def set_token(token):
             return "error"
     # -----------------
 
-    cred = {
-        'Type': win32cred.CRED_TYPE_GENERIC,
-        'TargetName': "github-access-token.glm",
-        'UserName': "github-access-token",
-        'CredentialBlob': token,
-        'Persist': win32cred.CRED_PERSIST_ENTERPRISE
-    }
-    
     try:
-        win32cred.CredWrite(cred, 0)
+        keyring.set_password("github-access-token.glm", "github-access-token", token)
         print(f"{Fore.GREEN}✓{Fore.RESET} 成功更新Token")
         return "successful"
     except Exception as e:
@@ -164,19 +156,23 @@ def get_labels(url, save):
     return "successful"
 
 # ---------------------------------------------------------------------------
-def clear_labels(url, token):
+def clear_labels(url, token, yes=False):
     # 本函数有以下行为
     # 正常操作清空指定仓库标签，并返回successful，错误时输出错误原因并返回具体错误信息
     # 可能返回如下错误
     # cancel 操作取消 | get error 获取时出错
 
+    # v1.7
+    # 在调用时如果传入 yes=True则直接确认所有提示
+
     flag = 0
 
-    # 确认
-    print(f"{Fore.BLUE}?{Fore.RESET} 确认删除?\n{Fore.YELLOW}⚠{Fore.RESET} 此操作将清空指定仓库的{Fore.YELLOW}所有{Fore.RESET}标签，不可撤销!")
-    if not (input("[Y]确认 [N]取消 : ").lower() in ["y", "yes", "确认"]):
-        print(f"{Fore.BLUE}[!]{Fore.RESET} 已取消操作")
-        return "cancel"
+    if not yes:
+        # 确认
+        print(f"{Fore.BLUE}?{Fore.RESET} 确认删除?\n{Fore.YELLOW}⚠{Fore.RESET} 此操作将清空指定仓库的{Fore.YELLOW}所有{Fore.RESET}标签，不可撤销!")
+        if not (input("[Y]确认 [N]取消 : ").lower() in ["y", "yes", "确认"]):
+            print(f"{Fore.BLUE}[!]{Fore.RESET} 已取消操作")
+            return "cancel"
 
     # 请求头
     headers = {
@@ -198,12 +194,13 @@ def clear_labels(url, token):
         else:
             print(f"{Fore.RED}✕{Fore.RESET} 删除标签 {Fore.BLUE}{label['name']}{Fore.RESET} 时失败: {Fore.YELLOW}{response.status_code}{Fore.RESET}\n{Fore.RED}{response.text}{Fore.RESET}")
             flag += 1
-            print(f"{Fore.BLUE}?{Fore.RESET} 是否继续?")
-            try:
-                input(f"按{Fore.BLUE}Enter{Fore.RESET}键确认，按{Fore.BLUE}Ctrl + C{Fore.RESET}键取消...")
-            except KeyboardInterrupt:
-                print(f"{Fore.BLUE}[!]{Fore.RESET} 已取消操作")
-                return "cancel"
+            if not yes:
+                print(f"{Fore.BLUE}?{Fore.RESET} 是否继续?")
+                try:
+                    input(f"按{Fore.BLUE}Enter{Fore.RESET}键确认，按{Fore.BLUE}Ctrl + C{Fore.RESET}键取消...")
+                except KeyboardInterrupt:
+                    print(f"{Fore.BLUE}[!]{Fore.RESET} 已取消操作")
+                    return "cancel"
 
     if flag:
         print(f"{Fore.YELLOW}⚠{Fore.RESET} 操作完成，共出现 {Fore.YELLOW}{flag}{Fore.RESET} 个失败项。")
@@ -322,6 +319,7 @@ def main():
     parser_clear = subparsers.add_parser('clear', help='清空标签')
     parser_clear.add_argument('repo_url', type=str, help='GitHub仓库URL')
     parser_clear.add_argument('--token', type=str, help='GitHub访问令牌')
+    parser_clear.add_argument('--yes', help='忽略(直接确认)操作中的所有提示', action='store_true')
 
     args = parser.parse_args()
 
@@ -419,7 +417,7 @@ def main():
             token = read_token()
             if token in ["error", "token error"]:
                 return 1, running_result
-        running_result = clear_labels(running_result, token)
+        running_result = clear_labels(running_result, token, args.yes)
         if running_result in ["cancel"]:
             return 1, running_result
     else:
