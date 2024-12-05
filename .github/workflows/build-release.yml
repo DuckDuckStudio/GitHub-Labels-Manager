@@ -39,10 +39,10 @@ jobs:
 
       - name: 压缩发行版
         run: |
-          7z a .\version\Release\zh-CN\GitHub-Labels-Manager-auto.zip .\version\Code\zh-CN
-          7z a .\version\Release\en-US\GitHub-Labels-Manager-auto-EN.zip .\version\Code\en-US
-          7z a .\version\Release\zh-CN\GitHub-Labels-Manager-auto.7z .\version\Code\zh-CN
-          7z a .\version\Release\en-US\GitHub-Labels-Manager-auto-EN.7z .\version\Code\en-US
+          7z a .\version\Release\zh-CN\GitHub-Labels-Manager-v1.7.zip .\version\Code\zh-CN
+          7z a .\version\Release\en-US\GitHub-Labels-Manager-v1.7-EN.zip .\version\Code\en-US
+          7z a .\version\Release\zh-CN\GitHub-Labels-Manager-v1.7.7z .\version\Code\zh-CN
+          7z a .\version\Release\en-US\GitHub-Labels-Manager-v1.7-EN.7z .\version\Code\en-US
 
       - name: 打包发行版
         run: |
