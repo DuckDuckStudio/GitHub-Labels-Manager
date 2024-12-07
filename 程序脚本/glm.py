@@ -10,7 +10,7 @@ from colorama import init, Fore
 
 init(autoreset=True)
 
-version = "1.7"
+version = "1.8"
 script_path = os.path.dirname(os.path.abspath(sys.argv[0]))
 config_path = os.path.join(script_path, "config.json")
 
@@ -95,35 +95,38 @@ def formatting_url(url):
         print(f"{Fore.RED}✕{Fore.RESET} 仓库链接{Fore.YELLOW}无效{Fore.RESET}，请确保你的仓库链接正确\n{Fore.BLUE}[!]{Fore.RESET} 建议检查链接是否过度，例如以下情况:\n{Fore.GREEN}正确:{Fore.RESET} https://github.com/example/example-repo/\n{Fore.RED}错误{Fore.RESET} https://github.com/example/example-repo/labels/")
         return "url error"
 
-def get_labels(url, save):
+def get_labels(url, save, yes=False):
     # 本函数有以下行为
     # 正常操作保存标签，并返回successful，错误时输出错误原因并返回具体错误信息
     # 可能返回如下错误
     # cancel 操作取消 | get error 获取时出错
+
+    # v1.8
+    # 在调用时如果传入 yes=True则直接确认所有提示
 
     # 获取标签
 
     if save:
         output = save
     else:
+        # 无论是否 --yes 都要选择
         print("请选择保存位置:", end=" ")
-
         output = filedialog.asksaveasfilename(filetypes=[
             ("标签数据json文件", "*.json")
         ])
 
     if not output:
         print(f"{Fore.RED}✕{Fore.RESET} 未选择保存位置")
-        return "cancel"# 返回取消状态
+        return "cancel" # 返回取消状态
 
     if not output.endswith(".json"):
         output += ".json"
     
-    if os.path.exists(output):
+    if os.path.exists(output) and not yes:
         print(f"{Fore.YELLOW}⚠{Fore.RESET} 保存位置已被占用！是否覆盖 [Y/N]")
         if input(f"{Fore.BLUE}?{Fore.RESET} [Y] 覆盖 [N] 取消: ").lower() not in ["是", "覆盖", "y", "yes"]:
             print(f"{Fore.BLUE}[!]{Fore.RESET} 已取消操作")
-            return "cancel"# 返回取消状态
+            return "cancel" # 返回取消状态
 
     print(f"\r{Fore.GREEN}✓{Fore.RESET} 已选择保存位置: {Fore.BLUE}{output}{Fore.RESET}")
     # ------------
@@ -293,6 +296,7 @@ def main():
     parser_get = subparsers.add_parser('get', help='获取标签')
     parser_get.add_argument('repo_url', type=str, help='GitHub仓库URL')
     parser_get.add_argument('--save', type=str, help='标签信息保存的位置')
+    parser_get.add_argument('--yes', help='忽略(直接确认)操作中的所有提示', action='store_true')
 
     # 命令：set
     parser_set = subparsers.add_parser('set', help='设置标签')
@@ -328,7 +332,7 @@ def main():
         running_result = formatting_url(args.repo_url)
         if running_result == "url error":
             return 1, running_result
-        running_result = get_labels(running_result, args.save)
+        running_result = get_labels(running_result, args.save, args.yes)
         if running_result in ["cancel", "get error"]:
             return 1, running_result
     elif args.command == 'set':

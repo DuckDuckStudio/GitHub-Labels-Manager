@@ -10,7 +10,7 @@ from colorama import init, Fore
 
 init(autoreset=True)
 
-version = "1.7"
+version = "1.8"
 script_path = os.path.dirname(os.path.abspath(sys.argv[0]))
 config_path = os.path.join(script_path, "config.json")
 
@@ -95,35 +95,38 @@ def formatting_url(url):
         print(f"{Fore.RED}✕{Fore.RESET} The repo link is {Fore.YELLOW}invalid{Fore.RESET}, please make sure your repo link is correct.\n{Fore.BLUE}[!]{Fore.RESET} The repo link should like the following:\n{Fore.GREEN}Correct:{Fore.RESET} https://github.com/example/example-repo/\n{Fore.RED}Error:{Fore.RESET} https://github.com/example/example-repo/labels/")
         return "url error"
 
-def get_labels(url, save):
+def get_labels(url, save, yes=False):
     # 本函数有以下行为
     # 正常操作保存标签，并返回successful，错误时输出错误原因并返回具体错误信息
     # 可能返回如下错误
     # cancel 操作取消 | get error 获取时出错
+
+    # v1.8
+    # 在调用时如果传入 yes=True则直接确认所有提示
 
     # 获取标签
 
     if save:
         output = save
     else:
+        # 无论是否 --yes 都要选择
         print("Please select a save location:", end=" ")
-
         output = filedialog.asksaveasfilename(filetypes=[
             ("Label data json file", "*.json")
         ])
 
     if not output:
         print(f"{Fore.RED}✕{Fore.RESET} No save location is selected.")
-        return "cancel"# 返回取消状态
+        return "cancel" # 返回取消状态
 
     if not output.endswith(".json"):
         output += ".json"
     
-    if os.path.exists(output):
+    if os.path.exists(output) and not yes:
         print(f"{Fore.YELLOW}⚠{Fore.RESET} The save location is occupied! Whether to overwrite it? [Y/N]")
         if input(f"{Fore.BLUE}?{Fore.RESET} [Y] Confirm [N] Cancel: ").lower() not in ["是", "覆盖", "overwrite", "y", "yes"]:
             print(f"{Fore.BLUE}[!]{Fore.RESET} Cancelled operation.")
-            return "cancel"# 返回取消状态
+            return "cancel" # 返回取消状态
 
     print(f"\r{Fore.GREEN}✓{Fore.RESET} The save location has been selected: {Fore.BLUE}{output}{Fore.RESET}")
     # ------------
@@ -293,6 +296,7 @@ def main():
     parser_get = subparsers.add_parser('get', help='Get labels')
     parser_get.add_argument('repo_url', type=str, help='GitHub repo URL')
     parser_get.add_argument('--save', type=str, help='Location where the label information is saved')
+    parser_get.add_argument('--yes', help='Ignore (confirm directly) all prompts in the operation', action='store_true')
 
     # 命令：set
     parser_set = subparsers.add_parser('set', help='Set labels')
@@ -328,7 +332,7 @@ def main():
         running_result = formatting_url(args.repo_url)
         if running_result == "url error":
             return 1, running_result
-        running_result = get_labels(running_result, args.save)
+        running_result = get_labels(running_result, args.save, args.yes)
         if running_result in ["cancel", "get error"]:
             return 1, running_result
     elif args.command == 'set':
