@@ -10,7 +10,7 @@ from colorama import init, Fore
 
 init(autoreset=True)
 
-version = "1.7"
+version = "1.8"
 script_path = os.path.dirname(os.path.abspath(sys.argv[0]))
 config_path = os.path.join(script_path, "config.json")
 
@@ -29,13 +29,14 @@ def read_token():
         print(f"{Fore.RED}✕{Fore.RESET} Error reading Token:\n{Fore.RED}{e}{Fore.RESET}")
         return "error"
 
-def set_token(token):
+def set_token(token, yes=False):
     # 凭据 github-access-token.glm
     # == 移除 ==
     if token == "remove":
-        print(f"{Fore.YELLOW}⚠{Fore.RESET} Are you sure you want to remove the set Token?")
         try:
-            input(f"Press {Fore.BLUE}Enter{Fore.RESET} to confirm, press {Fore.BLUE}Ctrl + C{Fore.RESET} to cancel...")
+            if not yes:
+                print(f"{Fore.YELLOW}⚠{Fore.RESET} Are you sure you want to remove the set Token?")
+                input(f"Press {Fore.BLUE}Enter{Fore.RESET} to confirm, press {Fore.BLUE}Ctrl + C{Fore.RESET} to cancel...")
             keyring.delete_password("github-access-token.glm", "github-access-token")
             print(f"{Fore.GREEN}✓{Fore.RESET} The Token was successfully removed.")
             return "successful"
@@ -48,7 +49,7 @@ def set_token(token):
 
     # == 添加 ==
     # --- Token 检查 ---
-    if not token.startswith('ghp_'):
+    if not token.startswith('ghp_') and not yes:
         print(f"{Fore.YELLOW}⚠{Fore.RESET} Please check whether the Token is correct.")
         try:
             input(f"Press {Fore.BLUE}Enter{Fore.RESET} to confirm, press {Fore.BLUE}Ctrl + C{Fore.RESET} to cancel...")
@@ -95,35 +96,38 @@ def formatting_url(url):
         print(f"{Fore.RED}✕{Fore.RESET} The repo link is {Fore.YELLOW}invalid{Fore.RESET}, please make sure your repo link is correct.\n{Fore.BLUE}[!]{Fore.RESET} The repo link should like the following:\n{Fore.GREEN}Correct:{Fore.RESET} https://github.com/example/example-repo/\n{Fore.RED}Error:{Fore.RESET} https://github.com/example/example-repo/labels/")
         return "url error"
 
-def get_labels(url, save):
+def get_labels(url, save, yes=False):
     # 本函数有以下行为
     # 正常操作保存标签，并返回successful，错误时输出错误原因并返回具体错误信息
     # 可能返回如下错误
     # cancel 操作取消 | get error 获取时出错
+
+    # v1.8
+    # 在调用时如果传入 yes=True则直接确认所有提示
 
     # 获取标签
 
     if save:
         output = save
     else:
+        # 无论是否 --yes 都要选择
         print("Please select a save location:", end=" ")
-
         output = filedialog.asksaveasfilename(filetypes=[
             ("Label data json file", "*.json")
         ])
 
     if not output:
         print(f"{Fore.RED}✕{Fore.RESET} No save location is selected.")
-        return "cancel"# 返回取消状态
+        return "cancel" # 返回取消状态
 
     if not output.endswith(".json"):
         output += ".json"
     
-    if os.path.exists(output):
+    if os.path.exists(output) and not yes:
         print(f"{Fore.YELLOW}⚠{Fore.RESET} The save location is occupied! Whether to overwrite it? [Y/N]")
         if input(f"{Fore.BLUE}?{Fore.RESET} [Y] Confirm [N] Cancel: ").lower() not in ["是", "覆盖", "overwrite", "y", "yes"]:
             print(f"{Fore.BLUE}[!]{Fore.RESET} Cancelled operation.")
-            return "cancel"# 返回取消状态
+            return "cancel" # 返回取消状态
 
     print(f"\r{Fore.GREEN}✓{Fore.RESET} The save location has been selected: {Fore.BLUE}{output}{Fore.RESET}")
     # ------------
@@ -268,11 +272,11 @@ def set_labels(url, token, json_file=None):
 
 # ---------------------------------------------------------------------------
 
-def copy_labels(source_url, set_url, token, json_file=os.path.join(script_path, "labels-temp.json"), save=False):
+def copy_labels(source_url, set_url, token, json_file, save=False, yes=False):
     # 调用get与set函数复制仓库标签
     # 传入先所有者，再仓库名
     # 先源仓库，再目标仓库，token，json_file，save
-    if get_labels(source_url, json_file) == "successful":
+    if get_labels(source_url, json_file, yes) == "successful":
         if set_labels(set_url, token, json_file) == "successful":
             if not save:
                 try:
@@ -293,6 +297,7 @@ def main():
     parser_get = subparsers.add_parser('get', help='Get labels')
     parser_get.add_argument('repo_url', type=str, help='GitHub repo URL')
     parser_get.add_argument('--save', type=str, help='Location where the label information is saved')
+    parser_get.add_argument('--yes', help='Ignore (confirm directly) all prompts in the operation', action='store_true')
 
     # 命令：set
     parser_set = subparsers.add_parser('set', help='Set labels')
@@ -307,6 +312,7 @@ def main():
     parser_copy.add_argument('--token', type=str, help='GitHub Token')
     parser_copy.add_argument('--json', type=str, help='Location of the Label data json file (default: labels-temp.json in the glm directory)')
     parser_copy.add_argument('--save', help='Reserve the Label data json file', action='store_true')
+    parser_copy.add_argument('--yes', help='Ignore (confirm directly) all prompts in the operation', action='store_true')
 
     # 命令：config
     parser_config = subparsers.add_parser('config', help='Modify the configuration of the program')
@@ -314,6 +320,7 @@ def main():
     parser_config.add_argument('--edit', help='Open configuration file', action='store_true')
     parser_config.add_argument('--version', help='Displays the version of GitHub Labels Manager (GLM)', action='store_true')
     parser_config.add_argument('--show', help='Show current configuration', action='store_true')
+    parser_config.add_argument('--yes', help='Ignore (confirm directly) all prompts in the operation', action='store_true')
 
     # 命令：clear
     parser_clear = subparsers.add_parser('clear', help='Clear labels')
@@ -328,7 +335,7 @@ def main():
         running_result = formatting_url(args.repo_url)
         if running_result == "url error":
             return 1, running_result
-        running_result = get_labels(running_result, args.save)
+        running_result = get_labels(running_result, args.save, args.yes)
         if running_result in ["cancel", "get error"]:
             return 1, running_result
     elif args.command == 'set':
@@ -370,12 +377,9 @@ def main():
             json_file = args.json
             if not json_file.endswith(".json"):
                 json_file += ".json"
-            if args.save:
-                running_result = copy_labels(source_repo, set_repo, token, json_file, True)
-            else:
-                running_result = copy_labels(source_repo, set_repo, token, json_file)
+            running_result = copy_labels(source_repo, set_repo, token, json_file, args.save, args.yes)
         else:
-            running_result = copy_labels(source_repo, set_repo, token)
+            running_result = copy_labels(source_repo, set_repo, token, os.path.join(script_path, "labels-temp.json"), False, args.yes)
         if running_result in ["file error", "function not return successful"]:
             return 1, running_result
     elif args.command == 'config':
@@ -391,7 +395,7 @@ def main():
 
             print(f"{Fore.GREEN}✓{Fore.RESET} Current configuration information:\n  Account configuration:\n    Token: {token}\n  Program configuration:\n    Version: {Fore.BLUE}GitHub Labels Manager v{version} by 鸭鸭「カモ」{Fore.RESET}\n      Installed in: {Fore.BLUE}{script_path}{Fore.RESET}")
         elif args.token:
-            running_result = set_token(args.token)
+            running_result = set_token(args.token, args.yes)
             if running_result == "error":
                 return 1, running_result
         elif args.edit:
