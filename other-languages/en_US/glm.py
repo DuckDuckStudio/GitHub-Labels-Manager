@@ -29,13 +29,14 @@ def read_token():
         print(f"{Fore.RED}✕{Fore.RESET} Error reading Token:\n{Fore.RED}{e}{Fore.RESET}")
         return "error"
 
-def set_token(token):
+def set_token(token, yes=False):
     # 凭据 github-access-token.glm
     # == 移除 ==
     if token == "remove":
-        print(f"{Fore.YELLOW}⚠{Fore.RESET} Are you sure you want to remove the set Token?")
         try:
-            input(f"Press {Fore.BLUE}Enter{Fore.RESET} to confirm, press {Fore.BLUE}Ctrl + C{Fore.RESET} to cancel...")
+            if not yes:
+                print(f"{Fore.YELLOW}⚠{Fore.RESET} Are you sure you want to remove the set Token?")
+                input(f"Press {Fore.BLUE}Enter{Fore.RESET} to confirm, press {Fore.BLUE}Ctrl + C{Fore.RESET} to cancel...")
             keyring.delete_password("github-access-token.glm", "github-access-token")
             print(f"{Fore.GREEN}✓{Fore.RESET} The Token was successfully removed.")
             return "successful"
@@ -48,7 +49,7 @@ def set_token(token):
 
     # == 添加 ==
     # --- Token 检查 ---
-    if not token.startswith('ghp_'):
+    if not token.startswith('ghp_') and not yes:
         print(f"{Fore.YELLOW}⚠{Fore.RESET} Please check whether the Token is correct.")
         try:
             input(f"Press {Fore.BLUE}Enter{Fore.RESET} to confirm, press {Fore.BLUE}Ctrl + C{Fore.RESET} to cancel...")
@@ -311,7 +312,7 @@ def main():
     parser_copy.add_argument('--token', type=str, help='GitHub Token')
     parser_copy.add_argument('--json', type=str, help='Location of the Label data json file (default: labels-temp.json in the glm directory)')
     parser_copy.add_argument('--save', help='Reserve the Label data json file', action='store_true')
-    parser_clear.add_argument('--yes', help='Ignore (confirm directly) all prompts in the operation', action='store_true')
+    parser_copy.add_argument('--yes', help='Ignore (confirm directly) all prompts in the operation', action='store_true')
 
     # 命令：config
     parser_config = subparsers.add_parser('config', help='Modify the configuration of the program')
@@ -319,6 +320,7 @@ def main():
     parser_config.add_argument('--edit', help='Open configuration file', action='store_true')
     parser_config.add_argument('--version', help='Displays the version of GitHub Labels Manager (GLM)', action='store_true')
     parser_config.add_argument('--show', help='Show current configuration', action='store_true')
+    parser_config.add_argument('--yes', help='Ignore (confirm directly) all prompts in the operation', action='store_true')
 
     # 命令：clear
     parser_clear = subparsers.add_parser('clear', help='Clear labels')
@@ -393,7 +395,7 @@ def main():
 
             print(f"{Fore.GREEN}✓{Fore.RESET} Current configuration information:\n  Account configuration:\n    Token: {token}\n  Program configuration:\n    Version: {Fore.BLUE}GitHub Labels Manager v{version} by 鸭鸭「カモ」{Fore.RESET}\n      Installed in: {Fore.BLUE}{script_path}{Fore.RESET}")
         elif args.token:
-            running_result = set_token(args.token)
+            running_result = set_token(args.token, args.yes)
             if running_result == "error":
                 return 1, running_result
         elif args.edit:

@@ -29,13 +29,14 @@ def read_token():
         print(f"{Fore.RED}✕{Fore.RESET} 读取Token时出错:\n{Fore.RED}{e}{Fore.RESET}")
         return "error"
 
-def set_token(token):
+def set_token(token, yes=False):
     # 凭据 github-access-token.glm
     # == 移除 ==
     if token == "remove":
-        print(f"{Fore.YELLOW}⚠{Fore.RESET} 确定要移除设置的Token?")
         try:
-            input(f"按{Fore.BLUE}Enter{Fore.RESET}键确认，按{Fore.BLUE}Ctrl + C{Fore.RESET}键取消...")
+            if not yes:
+                print(f"{Fore.YELLOW}⚠{Fore.RESET} 确定要移除设置的Token?")
+                input(f"按{Fore.BLUE}Enter{Fore.RESET}键确认，按{Fore.BLUE}Ctrl + C{Fore.RESET}键取消...")
             keyring.delete_password("github-access-token.glm", "github-access-token")
             print(f"{Fore.GREEN}✓{Fore.RESET} 成功移除设置的Token")
             return "successful"
@@ -48,7 +49,7 @@ def set_token(token):
 
     # == 添加 ==
     # --- Token 检查 ---
-    if not token.startswith('ghp_'):
+    if not token.startswith('ghp_') and not yes:
         print(f"{Fore.YELLOW}⚠{Fore.RESET} 请确认Token是否正确")
         try:
             input(f"按{Fore.BLUE}Enter{Fore.RESET}键确认，按{Fore.BLUE}Ctrl + C{Fore.RESET}键取消...")
@@ -311,7 +312,7 @@ def main():
     parser_copy.add_argument('--token', type=str, help='GitHub访问令牌')
     parser_copy.add_argument('--json', type=str, help='标签数据文件的存放位置(默认为glm所在目录下的labels-temp.json)')
     parser_copy.add_argument('--save', help='保留获取到的标签数据文件', action='store_true')
-    parser_clear.add_argument('--yes', help='忽略(直接确认)操作中的所有提示', action='store_true')
+    parser_copy.add_argument('--yes', help='忽略(直接确认)操作中的所有提示', action='store_true')
 
     # 命令：config
     parser_config = subparsers.add_parser('config', help='修改配置')
@@ -319,6 +320,7 @@ def main():
     parser_config.add_argument('--edit', help='打开配置文件', action='store_true')
     parser_config.add_argument('--version', help='显示GLM版本', action='store_true')
     parser_config.add_argument('--show', help='显示当前配置', action='store_true')
+    parser_config.add_argument('--yes', help='忽略(直接确认)操作中的所有提示', action='store_true')
 
     # 命令：clear
     parser_clear = subparsers.add_parser('clear', help='清空标签')
@@ -393,7 +395,7 @@ def main():
 
             print(f"{Fore.GREEN}✓{Fore.RESET} 当前配置信息如下:\n  账户设置:\n    Token: {token}\n  程序设置:\n    版本: {Fore.BLUE}GitHub Labels Manager v{version} by 鸭鸭「カモ」{Fore.RESET}\n      安装在: {Fore.BLUE}{script_path}{Fore.RESET}")
         elif args.token:
-            running_result = set_token(args.token)
+            running_result = set_token(args.token, args.yes)
             if running_result == "error":
                 return 1, running_result
         elif args.edit:
