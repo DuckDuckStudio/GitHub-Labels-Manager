@@ -271,11 +271,11 @@ def set_labels(url, token, json_file=None):
 
 # ---------------------------------------------------------------------------
 
-def copy_labels(source_url, set_url, token, json_file=os.path.join(script_path, "labels-temp.json"), save=False):
+def copy_labels(source_url, set_url, token, json_file, save=False, yes=False):
     # 调用get与set函数复制仓库标签
     # 传入先所有者，再仓库名
     # 先源仓库，再目标仓库，token，json_file，save
-    if get_labels(source_url, json_file) == "successful":
+    if get_labels(source_url, json_file, yes) == "successful":
         if set_labels(set_url, token, json_file) == "successful":
             if not save:
                 try:
@@ -311,6 +311,7 @@ def main():
     parser_copy.add_argument('--token', type=str, help='GitHub访问令牌')
     parser_copy.add_argument('--json', type=str, help='标签数据文件的存放位置(默认为glm所在目录下的labels-temp.json)')
     parser_copy.add_argument('--save', help='保留获取到的标签数据文件', action='store_true')
+    parser_clear.add_argument('--yes', help='忽略(直接确认)操作中的所有提示', action='store_true')
 
     # 命令：config
     parser_config = subparsers.add_parser('config', help='修改配置')
@@ -374,12 +375,9 @@ def main():
             json_file = args.json
             if not json_file.endswith(".json"):
                 json_file += ".json"
-            if args.save:
-                running_result = copy_labels(source_repo, set_repo, token, json_file, True)
-            else:
-                running_result = copy_labels(source_repo, set_repo, token, json_file)
+            running_result = copy_labels(source_repo, set_repo, token, json_file, args.save, args.yes)
         else:
-            running_result = copy_labels(source_repo, set_repo, token)
+            running_result = copy_labels(source_repo, set_repo, token, os.path.join(script_path, "labels-temp.json"), False, args.yes)
         if running_result in ["file error", "function not return successful"]:
             return 1, running_result
     elif args.command == 'config':
