@@ -74,8 +74,8 @@ jobs:
 
       - name: 测试源码
         run: |
-          echo ============ EN ============
-          echo xxxxxxxxxxxx HELP xxxxxxxxxxxx
+          Write-Output "============ EN ============"
+          Write-Output "xxxxxxxxxxxx HELP xxxxxxxxxxxx"
           python "other-languages\en-US\glm.py" --help
           python "other-languages\en-US\glm.py" get --help
           python "other-languages\en-US\glm.py" set --help
