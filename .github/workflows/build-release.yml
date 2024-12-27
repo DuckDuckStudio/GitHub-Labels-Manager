@@ -83,7 +83,7 @@ jobs:
           python "other-languages\en-US\glm.py" config --help
           python "other-languages\en-US\glm.py" clear --help
 
-          echo xxxxxxxxxxxx USE xxxxxxxxxxxx
+          Write-Output "xxxxxxxxxxxx USE xxxxxxxxxxxx"
           python "other-languages\en-US\glm.py" get https://github.com/DuckDuckStudio/Fufu_Tools --save "labels.json"
           Get-Content .\labels.json -Encoding UTF8
           del .\labels.json
