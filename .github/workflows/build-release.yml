@@ -125,7 +125,7 @@ jobs:
           glm config --help
           glm clear --help
   
-          echo xxxxxxxxxxxx USE xxxxxxxxxxxx
+          Write-Output "xxxxxxxxxxxx USE xxxxxxxxxxxx"
           glm get https://github.com/DuckDuckStudio/Fufu_Tools --save "labels.json"
           Get-Content .\labels.json -Encoding UTF8
           del .\labels.json
