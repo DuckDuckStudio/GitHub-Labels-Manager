@@ -50,7 +50,7 @@ body:
   - type: textarea
     attributes:
       label: 确认相关信息
-      description: 请将 `ghv config --show` 的输出放到这里 (v1.8版本之前的用户请使用 `ghv config --version`)
+      description: 请将 `ghv config --show` 的输出放到这里 (版本 v1.8 之前的用户请使用 `ghv config --version`)
       render: raw
     validations:
       required: true
