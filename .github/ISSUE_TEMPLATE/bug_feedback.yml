@@ -1,0 +1,62 @@
+name: '🐛 BUG反馈'
+description: 向我们反馈你遇到的错误
+title: "[BUG]: "
+labels: ["bug", "DEV-需要注意", "DEV-未经测试"]
+body:
+  - type: checkboxes
+    attributes:
+      label: 在继续之前，请确认以下内容
+      description: 在发布您的问题之前，请确认以下内容。
+      options:
+        - label: 我已经搜索过已存在的问题，并没有存在相同的正在进行中/重复/已解决的问题
+          required: true
+        - label: 我知道由于作者的精力和知识有限，可能不会处理一些错误
+          required: true
+  - type: dropdown
+    attributes:
+      label: 选择一个问题类别
+      description: 你遇到了什么样的问题?
+      options:
+        - 使用错误
+        - 显示错误
+        - API错误
+        - 其他
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: 描述你遇到的问题
+      placeholder: 请在此简要描述您的问题
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: 描述如何重现你遇到的问题
+      placeholder: 如何重现该问题？(填写此字段对问题调查很有帮助!)
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: 实际行为
+      placeholder: 你遇到的情况是什么样的
+    validations:
+      required: false
+  - type: textarea
+    attributes:
+      label: 预期行为
+      placeholder: 正常情况下应该是什么样的
+    validations:
+      required: false
+  - type: textarea
+    attributes:
+      label: 确认相关信息
+      description: 请将 `ghv config --show` 的输出放到这里 (版本 v1.8 之前的用户请使用 `ghv config --version`)
+      render: raw
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: 屏幕截图或日志
+      description: 请上传你记录的日志/屏幕截图，因为它们将帮助我们找到问题的根本原因。
+    validations:
+      required: true
