@@ -17,9 +17,9 @@ body:
       label: 选择一个问题类别
       description: 你遇到了什么样的问题?
       options:
-        - 文档错误
+        - 使用错误
         - 显示错误
-        - 功能错误
+        - API错误
         - 其他
     validations:
       required: true
