@@ -6,7 +6,7 @@
 
 <img alt="Banner" src="https://svg-banners.vercel.app/api?type=rainbow&text1=GitHub%20Labels%20Manager&width=800&height=400" style="text-align: center;">
 
-[中文](https://github.com/DuckDuckStudio/GitHub-Labels-Manager/blob/main/README.md) | [English](https://github.com/DuckDuckStudio/GitHub-Labels-Manager/blob/main/other-languages/en_US/README.md)  
+[中文](https://github.com/DuckDuckStudio/GitHub-Labels-Manager/blob/main/README.md) | [English](https://github.com/DuckDuckStudio/GitHub-Labels-Manager/blob/main/other-languages/en-US/README.md)  
 
 ## 项目简介
 GLM提供了以下几种功能:  

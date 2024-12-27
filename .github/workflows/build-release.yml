@@ -33,7 +33,7 @@ jobs:
       - name: 整理文件
         run: |
           robocopy ".\程序脚本" "version\Code\zh-CN" /e
-          robocopy ".\other-languages\en_US" "version\Code\en-US" /e
+          robocopy ".\other-languages\en-US" "version\Code\en-US" /e
           robocopy . "version\Code\zh-CN\" LICENSE
           robocopy . "version\Code\en-US\" LICENSE
         continue-on-error: true
