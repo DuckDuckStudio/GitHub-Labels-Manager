@@ -10,12 +10,13 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: 检出代码
+        uses: actions/checkout@v4
 
       - name: 配置 Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: '3.13'
 
       - name: 安装依赖
         run: |
@@ -32,17 +33,19 @@ jobs:
       - name: 整理文件
         run: |
           robocopy ".\程序脚本" "version\Code\zh-CN" /e
-          robocopy ".\other-languages\en_US" "version\Code\en-US" /e
+          robocopy ".\other-languages\en-US" "version\Code\en-US" /e
           robocopy . "version\Code\zh-CN\" LICENSE
           robocopy . "version\Code\en-US\" LICENSE
         continue-on-error: true
 
+      # ============ Compile ============
+
       - name: 压缩发行版
         run: |
-          7z a .\version\Release\zh-CN\GitHub-Labels-Manager-v1.8.zip .\version\Code\zh-CN
-          7z a .\version\Release\en-US\GitHub-Labels-Manager-v1.8-EN.zip .\version\Code\en-US
-          7z a .\version\Release\zh-CN\GitHub-Labels-Manager-v1.8.7z .\version\Code\zh-CN
-          7z a .\version\Release\en-US\GitHub-Labels-Manager-v1.8-EN.7z .\version\Code\en-US
+          7z a .\version\Release\zh-CN\GitHub-Labels-Manager-v1.9.zip .\version\Code\zh-CN
+          7z a .\version\Release\en-US\GitHub-Labels-Manager-v1.9-EN.zip .\version\Code\en-US
+          7z a .\version\Release\zh-CN\GitHub-Labels-Manager-v1.9.7z .\version\Code\zh-CN
+          7z a .\version\Release\en-US\GitHub-Labels-Manager-v1.9-EN.7z .\version\Code\en-US
 
       - name: 打包发行版
         run: |
@@ -59,13 +62,15 @@ jobs:
 
       - name: 验证文件
         run: |
-          tree /f
+          tree /f /a
 
       - name: 打包安装程序
         run: |
           iscc pack.iss
           echo =======================
           iscc packEN.iss
+
+      # ============ Upload ============
 
       - name: 上传构建文件
         uses: actions/upload-artifact@v4
