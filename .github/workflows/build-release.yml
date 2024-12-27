@@ -93,8 +93,8 @@ jobs:
 
       - name: 测试打包
         run: |
-          echo ============ EN ============
-          echo xxxxxxxxxxxx HELP xxxxxxxxxxxx
+          Write-Output "============ EN ============"
+          Write-Output "xxxxxxxxxxxx HELP xxxxxxxxxxxx"
           & "version\Code\en-US\glm.exe" --help
           & "version\Code\en-US\glm.exe" get --help
           & "version\Code\en-US\glm.exe" set --help
