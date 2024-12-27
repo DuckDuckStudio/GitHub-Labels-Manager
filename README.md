@@ -106,7 +106,7 @@ winget install DuckStudio.GitHubLabelsManager
 ```
 
 > [!TIP]
-> 设支持的版本号为n，则 $1.1 \leqslant n \leqslant 1.4$  
+> 设支持的版本号为n，则 $1.1 \leqslant n \leqslant 1.8$  
 
 ## 如何使用
 运行以下命令以获取帮助:  

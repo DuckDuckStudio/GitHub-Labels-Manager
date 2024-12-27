@@ -32,9 +32,9 @@ jobs:
 
       - name: 整理文件
         run: |
-          robocopy ".\程序脚本" "version\Code\zh-CN" /e
+          robocopy ".\程序脚本" "version\Code\en_US" /e
           robocopy ".\other-languages\en_US" "version\Code\en-US" /e
-          robocopy . "version\Code\zh-CN\" LICENSE
+          robocopy . "version\Code\en_US\" LICENSE
           robocopy . "version\Code\en-US\" LICENSE
         continue-on-error: true
 
@@ -42,18 +42,18 @@ jobs:
 
       - name: 压缩发行版
         run: |
-          7z a .\version\Release\zh-CN\GitHub-Labels-Manager-v1.8.zip .\version\Code\zh-CN
-          7z a .\version\Release\en-US\GitHub-Labels-Manager-v1.8-EN.zip .\version\Code\en-US
-          7z a .\version\Release\zh-CN\GitHub-Labels-Manager-v1.8.7z .\version\Code\zh-CN
-          7z a .\version\Release\en-US\GitHub-Labels-Manager-v1.8-EN.7z .\version\Code\en-US
+          7z a .\version\Release\en_US\GitHub-Labels-Manager-v1.9.zip .\version\Code\en_US
+          7z a .\version\Release\en-US\GitHub-Labels-Manager-v1.9-EN.zip .\version\Code\en-US
+          7z a .\version\Release\en_US\GitHub-Labels-Manager-v1.9.7z .\version\Code\en_US
+          7z a .\version\Release\en-US\GitHub-Labels-Manager-v1.9-EN.7z .\version\Code\en-US
 
       - name: 打包发行版
         run: |
-          pyinstaller --onefile -i ico.ico --distpath=.\version\Code\zh-CN --name=glm.exe .\version\Code\zh-CN\glm.py --hiddenimport win32timezone
+          pyinstaller --onefile -i ico.ico --distpath=.\version\Code\en_US --name=glm.exe .\version\Code\en_US\glm.py --hiddenimport win32timezone
           echo ======================================
           pyinstaller --onefile -i ico.ico --distpath=.\version\Code\en-US --name=glm.exe .\version\Code\en-US\glm.py --hiddenimport win32timezone
           echo ======================================
-          del .\version\Code\zh-CN\glm.py
+          del .\version\Code\en_US\glm.py
           del .\version\Code\en-US\glm.py
 
       - name: 配置 Inno 中文翻译
@@ -74,23 +74,6 @@ jobs:
 
       - name: 测试源码
         run: |
-          echo ============ ZH ============
-          echo xxxxxxxxxxxx HELP xxxxxxxxxxxx
-          python "程序脚本\glm.py" --help
-          python "程序脚本\glm.py" get --help
-          python "程序脚本\glm.py" set --help
-          python "程序脚本\glm.py" copy --help
-          python "程序脚本\glm.py" config --help
-          python "程序脚本\glm.py" clear --help
-
-          echo xxxxxxxxxxxx USE xxxxxxxxxxxx
-          python "程序脚本\glm.py" get https://github.com/DuckDuckStudio/Fufu_Tools --save "labels.json"
-          Get-Content .\labels.json -Encoding UTF8
-          del .\labels.json
-
-          python "程序脚本\glm.py" config --version
-          python "程序脚本\glm.py" config --show
-
           echo ============ EN ============
           echo xxxxxxxxxxxx HELP xxxxxxxxxxxx
           python "other-languages\en_US\glm.py" --help
@@ -110,43 +93,26 @@ jobs:
 
       - name: 测试打包
         run: |
-          echo ============ ZH ============
-          echo xxxxxxxxxxxx HELP xxxxxxxxxxxx
-          & "version\Code\zh-CN\glm.exe" --help
-          & "version\Code\zh-CN\glm.exe" get --help
-          & "version\Code\zh-CN\glm.exe" set --help
-          & "version\Code\zh-CN\glm.exe" copy --help
-          & "version\Code\zh-CN\glm.exe" config --help
-          & "version\Code\zh-CN\glm.exe" clear --help
-      
-          echo xxxxxxxxxxxx USE xxxxxxxxxxxx
-          & "version\Code\zh-CN\glm.exe" get https://github.com/DuckDuckStudio/Fufu_Tools --save "labels.json"
-          Get-Content .\labels.json -Encoding UTF8
-          del .\labels.json
-      
-          & "version\Code\zh-CN\glm.exe" config --version
-          & "version\Code\zh-CN\glm.exe" config --show
-      
           echo ============ EN ============
           echo xxxxxxxxxxxx HELP xxxxxxxxxxxx
-          & "version\Code\zh-CN\glm.exe" --help
-          & "version\Code\zh-CN\glm.exe" get --help
-          & "version\Code\zh-CN\glm.exe" set --help
-          & "version\Code\zh-CN\glm.exe" copy --help
-          & "version\Code\zh-CN\glm.exe" config --help
-          & "version\Code\zh-CN\glm.exe" clear --help
+          & "version\Code\en_US\glm.exe" --help
+          & "version\Code\en_US\glm.exe" get --help
+          & "version\Code\en_US\glm.exe" set --help
+          & "version\Code\en_US\glm.exe" copy --help
+          & "version\Code\en_US\glm.exe" config --help
+          & "version\Code\en_US\glm.exe" clear --help
       
           echo xxxxxxxxxxxx USE xxxxxxxxxxxx
-          & "version\Code\zh-CN\glm.exe" get https://github.com/DuckDuckStudio/Fufu_Tools --save "labels.json"
+          & "version\Code\en_US\glm.exe" get https://github.com/DuckDuckStudio/Fufu_Tools --save "labels.json"
           Get-Content .\labels.json -Encoding UTF8
           del .\labels.json
       
-          & "version\Code\zh-CN\glm.exe" config --version
-          & "version\Code\zh-CN\glm.exe" config --show
+          & "version\Code\en_US\glm.exe" config --version
+          & "version\Code\en_US\glm.exe" config --show
 
       - name: 测试安装程序-INSTALL
         run: |
-          & "version\Release\zh-CN\GitHub_Labels_Manager_Setup_v1.4.exe" /verysilent /suppressmsgboxes
+          & "version\Release\en_US\GitHub_Labels_Manager_Setup_v1.9-EN.exe" /verysilent /suppressmsgboxes
       
       - name: 测试安装程序-RUN
         run: |
@@ -174,5 +140,5 @@ jobs:
         with:
           name: build-artifacts
           path: |
-            .\version\Release\zh-CN\*
+            .\version\Release\en_US\*
             .\version\Release\en-US\*
