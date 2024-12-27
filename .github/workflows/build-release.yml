@@ -116,8 +116,8 @@ jobs:
       
       - name: 测试安装程序-RUN
         run: |
-          echo ============ EN ============
-          echo xxxxxxxxxxxx HELP xxxxxxxxxxxx
+          Write-Output "============ EN ============"
+          Write-Output "xxxxxxxxxxxx HELP xxxxxxxxxxxx"
           glm --help
           glm get --help
           glm set --help
