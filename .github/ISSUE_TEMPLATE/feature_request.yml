@@ -12,7 +12,6 @@ body:
       label: 选择一个类别
       description: 是什么类型的新功能捏？
       options:
-        - 新文档
         - 新命令
         - 新参数
         - 其他
