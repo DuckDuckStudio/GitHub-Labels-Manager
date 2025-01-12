@@ -3,6 +3,10 @@ on:
   release:
     types: [published]
   workflow_dispatch:
+    inputs:
+      version:
+        description: 版本号 (不带v)
+        required: true
 
 jobs:
   build:
@@ -16,9 +20,11 @@ jobs:
       - name: 配置 Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.13'
+          python-version: '3.x'
 
       - name: 安装依赖
+        env:
+          PYTHONIOENCODING: utf-8
         run: |
           python.exe -m pip install --upgrade pip
           pip install pyinstaller
@@ -30,13 +36,19 @@ jobs:
           Invoke-WebRequest -Uri $upx_url -OutFile "upx-latest.zip"
           7z x "upx-latest.zip" -o"."
 
+      - name: 更新版本号
+        env:
+          PYTHONIOENCODING: utf-8
+        # 前面已经配置过 Python 了，这个脚本只用 os 和 sys 这两个标准库，不用再装依赖
+        run: |
+          python "自动化脚本/修改版本号.py" "${{ github.event.inputs.version }}"
+
       - name: 整理文件
         run: |
-          robocopy ".\程序脚本" "version\Code\zh-CN" /e
-          robocopy ".\other-languages\en-US" "version\Code\en-US" /e
-          robocopy . "version\Code\zh-CN\" LICENSE
-          robocopy . "version\Code\en-US\" LICENSE
-        continue-on-error: true
+          Copy-Item -Path ".\程序脚本" -Destination "version\Code\zh-CN" -Recurse -Verbose
+          Copy-Item -Path ".\other-languages\en-US" -Destination "version\Code\en-US" -Recurse -Verbose
+          Copy-Item -Path ".\LICENSE" -Destination "version\Code\zh-CN" -Verbose
+          Copy-Item -Path ".\LICENSE" -Destination "version\Code\en-US" -Verbose
 
       # ============ Compile ============
 
@@ -75,7 +87,7 @@ jobs:
       - name: 上传构建文件
         uses: actions/upload-artifact@v4
         with:
-          name: build-artifacts
+          name: GitHub-Labels-Manager-${{ github.event.inputs.version }}
           path: |
             .\version\Release\zh-CN\*
             .\version\Release\en-US\*

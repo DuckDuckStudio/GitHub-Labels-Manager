@@ -10,7 +10,7 @@ from colorama import init, Fore
 
 init(autoreset=True)
 
-version = "1.9"
+version = "develop"
 script_path = os.path.dirname(os.path.abspath(sys.argv[0]))
 config_path = os.path.join(script_path, "config.json")
 
