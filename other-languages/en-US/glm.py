@@ -10,7 +10,7 @@ from colorama import init, Fore
 
 init(autoreset=True)
 
-version = "1.9"
+version = "develop"
 script_path = os.path.dirname(os.path.abspath(sys.argv[0]))
 config_path = os.path.join(script_path, "config.json")
 
@@ -154,10 +154,10 @@ def get_labels(url, save, yes=False):
             json.dump(label_info, f, ensure_ascii=False, indent=4)
         
         print(f"{Fore.GREEN}✓{Fore.RESET} Label information has been written to {Fore.BLUE}{output}{Fore.BLUE}")
+        return "successful"
     else:
         print(f"{Fore.RED}✕{Fore.RESET} Unable to get labels，The status code returned by the remote server is not 200: {Fore.YELLOW}{response.status_code}{Fore.RESET}")
         return "get error"# 返回获取错误
-    return "successful"
 
 # ---------------------------------------------------------------------------
 def clear_labels(url, token, yes=False):
@@ -268,6 +268,8 @@ def set_labels(url, token, json_file=None):
         else:
             print(f"{Fore.RED}✕{Fore.RESET} Failed to create label {Fore.BLUE}{label['name']}{Fore.RESET}: {Fore.YELLOW}{response.status_code}{Fore.RESET}\n{Fore.RED}{response.text}{Fore.RESET}")
             return "error"
+    print(f"{Fore.GREEN}✓{Fore.RESET} Successfully set all labels!")
+    # Set 的过去式和过去分词都是 Set - https://www.bing.com/search?q=set+过去式
     return "successful"
 
 # ---------------------------------------------------------------------------
@@ -284,6 +286,7 @@ def copy_labels(source_url, set_url, token, json_file, save=False, yes=False):
                 except Exception as e:
                     print(f"{Fore.RED}✕{Fore.RESET} Error deleting temporary data file:\n{Fore.RED}{e}{Fore.RESET}")
                     return "file error"
+            print(f"{Fore.GREEN}✓{Fore.RESET} Successfully copied all labels!")
             return "successful"
     return "function not return successful"
 

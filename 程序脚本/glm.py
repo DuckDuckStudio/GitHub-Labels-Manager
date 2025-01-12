@@ -10,7 +10,7 @@ from colorama import init, Fore
 
 init(autoreset=True)
 
-version = "1.9"
+version = "develop"
 script_path = os.path.dirname(os.path.abspath(sys.argv[0]))
 config_path = os.path.join(script_path, "config.json")
 
@@ -154,10 +154,10 @@ def get_labels(url, save, yes=False):
             json.dump(label_info, f, ensure_ascii=False, indent=4)
         
         print(f"{Fore.GREEN}✓{Fore.RESET} 标签信息已写入 {Fore.BLUE}{output}{Fore.BLUE}")
+        return "successful"
     else:
         print(f"{Fore.RED}✕{Fore.RESET} 无法获取标签，返回的状态码不为200: {Fore.YELLOW}{response.status_code}{Fore.RESET}")
         return "get error"# 返回获取错误
-    return "successful"
 
 # ---------------------------------------------------------------------------
 def clear_labels(url, token, yes=False):
@@ -268,6 +268,7 @@ def set_labels(url, token, json_file=None):
         else:
             print(f"{Fore.RED}✕{Fore.RESET} 创建标签 {Fore.BLUE}{label['name']}{Fore.RESET} 失败: {Fore.YELLOW}{response.status_code}{Fore.RESET}\n{Fore.RED}{response.text}{Fore.RESET}")
             return "error"
+    print(f"{Fore.GREEN}✓{Fore.RESET} 成功设置所有标签！")
     return "successful"
 
 # ---------------------------------------------------------------------------
@@ -284,6 +285,7 @@ def copy_labels(source_url, set_url, token, json_file, save=False, yes=False):
                 except Exception as e:
                     print(f"{Fore.RED}✕{Fore.RESET} 删除临时数据文件时出错:\n{Fore.RED}{e}{Fore.RESET}")
                     return "file error"
+            print(f"{Fore.GREEN}✓{Fore.RESET} 成功复制所有标签！")
             return "successful"
     return "function not return successful"
 
