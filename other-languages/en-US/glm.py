@@ -49,7 +49,7 @@ def set_token(token, yes=False):
 
     # == 添加 ==
     # --- Token 检查 ---
-    if not token.startswith('ghp_') and not yes:
+    if not (token.startswith("ghp_") and token.startwith("github_pat_") and yes):
         print(f"{Fore.YELLOW}⚠{Fore.RESET} Please check whether the Token is correct.")
         try:
             input(f"Press {Fore.BLUE}Enter{Fore.RESET} to confirm, press {Fore.BLUE}Ctrl + C{Fore.RESET} to cancel...")
