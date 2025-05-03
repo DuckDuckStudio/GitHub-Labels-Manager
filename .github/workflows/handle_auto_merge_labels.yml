@@ -6,6 +6,9 @@ on:
       - auto_merge_enabled
       - auto_merge_disabled
 
+permissions:
+  pull-requests: write
+
 jobs:
   handle_auto_merge_labels:
     runs-on: ubuntu-latest
