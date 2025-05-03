@@ -411,7 +411,7 @@ def main():
             print(f"{Fore.GREEN}✓{Fore.RESET} 当前使用的版本为:\nGitHub Labels Manager v{Fore.BLUE}{version}{Fore.RESET}\n安装在: {Fore.BLUE}{script_path}{Fore.RESET}")
         else:
             print(f"{Fore.RED}✕{Fore.RESET} 缺少配置项")
-            return 1, running_result
+            return 1, "cancel"
     elif args.command == 'clear':
         # 清除功能的实现
         running_result = formatting_url(args.repo_url)
