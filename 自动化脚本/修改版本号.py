@@ -30,8 +30,8 @@ print(f"[INFO] 新版本号: {新版本号}")
 # 文件路径和替换规则
 文件和替换规则 = [
     (os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(sys.argv[0]))), "程序脚本", "glm.py"), 'version = "develop"', f'version = "{新版本号}"'),
-    (os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(sys.argv[0]))), "程序脚本", "config.json"), '"version": "develop"', f'"version" = "{新版本号}"'),
-    (os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(sys.argv[0]))), "other-languages", "en-US", "config.json"), '"version": "develop"', f'"version" = "{新版本号}"'),
+    (os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(sys.argv[0]))), "程序脚本", "config.json"), '"version": "develop"', f'"version": "{新版本号}"'),
+    (os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(sys.argv[0]))), "other-languages", "en-US", "config.json"), '"version": "develop"', f'"version": "{新版本号}"'),
     (os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(sys.argv[0]))), "other-languages", "en-US", "glm.py"), 'version = "develop"', f'version = "{新版本号}"'),
     (os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(sys.argv[0]))), "pack.iss"), "develop", 新版本号),
         (os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(sys.argv[0]))), "packEN.iss"), "develop", 新版本号)
