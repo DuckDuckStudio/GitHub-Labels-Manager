@@ -6,6 +6,9 @@ on:
         description: 版本号 (不带v)
         required: true
 
+permissions:
+  contents: write
+
 jobs:
   build:
     name: 构建发行版
@@ -52,10 +55,10 @@ jobs:
 
       - name: 压缩发行版
         run: |
-          7z a .\version\Release\zh-CN\GitHub-Labels-Manager-v1.9.zip .\version\Code\zh-CN
-          7z a .\version\Release\en-US\GitHub-Labels-Manager-v1.9-EN.zip .\version\Code\en-US
-          7z a .\version\Release\zh-CN\GitHub-Labels-Manager-v1.9.7z .\version\Code\zh-CN
-          7z a .\version\Release\en-US\GitHub-Labels-Manager-v1.9-EN.7z .\version\Code\en-US
+          7z a .\version\Release\zh-CN\GitHub-Labels-Manager-v${{ github.event.inputs.version }}.zip .\version\Code\zh-CN
+          7z a .\version\Release\en-US\GitHub-Labels-Manager-v${{ github.event.inputs.version }}-EN.zip .\version\Code\en-US
+          7z a .\version\Release\zh-CN\GitHub-Labels-Manager-v${{ github.event.inputs.version }}.7z .\version\Code\zh-CN
+          7z a .\version\Release\en-US\GitHub-Labels-Manager-v${{ github.event.inputs.version }}-EN.7z .\version\Code\en-US
 
       - name: 打包发行版
         run: |
