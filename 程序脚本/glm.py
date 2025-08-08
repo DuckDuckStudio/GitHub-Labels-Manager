@@ -29,7 +29,7 @@ def read_token():
         print(f"{Fore.RED}✕{Fore.RESET} 读取Token时出错:\n{Fore.RED}{e}{Fore.RESET}")
         return "error"
 
-def set_token(token, yes=False):
+def set_token(token: str, yes=False):
     # 凭据 github-access-token.glm
     # == 移除 ==
     if token == "remove":
@@ -49,7 +49,7 @@ def set_token(token, yes=False):
 
     # == 添加 ==
     # --- Token 检查 ---
-    if not (token.startswith("ghp_") and token.startwith("github_pat_") and yes):
+    if not (token.startswith("ghp_") or token.startswith("github_pat_") or yes):
         print(f"{Fore.YELLOW}⚠{Fore.RESET} 请确认Token是否正确")
         try:
             input(f"按{Fore.BLUE}Enter{Fore.RESET}键确认，按{Fore.BLUE}Ctrl + C{Fore.RESET}键取消...")
