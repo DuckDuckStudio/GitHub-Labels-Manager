@@ -12,7 +12,7 @@ permissions:
 jobs:
   build:
     name: 构建发行版
-    runs-on: windows-latest
+    runs-on: windows-2022
 
     steps:
       - name: 检出代码
@@ -21,7 +21,7 @@ jobs:
       - name: 配置 Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.x'
+          python-version: 3.x
 
       - name: 安装依赖
         env:
