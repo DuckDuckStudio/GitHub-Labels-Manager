@@ -12,7 +12,7 @@ permissions:
 jobs:
   build:
     name: 构建发行版
-    runs-on: windows-2022
+    runs-on: windows-latest
 
     steps:
       - name: 检出代码
