@@ -8,19 +8,16 @@
 
 [中文](https://github.com/DuckDuckStudio/GitHub-Labels-Manager/blob/main/README.md) | [English](https://github.com/DuckDuckStudio/GitHub-Labels-Manager/blob/main/other-languages/en-US/README.md)  
 
+> [!WARNING]  
+> 该项目不再维护，建议改用 `gh label` 命令。  
+> 参见 [GitHub CLI 手册](https://cli.github.com/manual)了解关于此命令的说明。
+
 ## 项目简介
 GLM提供了以下几种功能:  
 - [x] 获取某个仓库的所有标签，并存在指定目录的`labels.json`中
 - [x] 清空某个仓库的标签 *(需要有repo权限的token)*
 - [x] 依据指定的 **json** 文件设置某个仓库的标签 *(先清空指定仓库的标签后再设置，需要有repo权限的token)*
 - [x] 复制某个仓库的标签到另一个仓库 *(先清空指定仓库的标签后再设置，需要有repo权限的token)*
-
-### 关于图标
-目前的图标仅作临时使用，后续如有正式设计将会替换。  
-[吐槽动态](https://www.bilibili.com/opus/949997717411594275)  
-
-> [!TIP]
-> 如果你想设计新图标可以将你的设计发至<Yzcbs123@163.com>，感谢您对本项目的支持！  
 
 ## 使用前配置
 ### Python
@@ -55,7 +52,7 @@ pip install -r requirements.txt
 > 使用winget获取的不需要弄。  
 
 ### Token
-你需要一个GitHub Token才可以运行部分功能。  
+你需要一个 GitHub Token 才可以运行部分功能。  
 
 > [!TIP]
 > 官方文档 → [管理个人访问令牌 - GitHub 文档](https://docs.github.com/zh/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#%E5%88%9B%E5%BB%BA-personal-access-token-classic)  

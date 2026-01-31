@@ -8,18 +8,17 @@
 
 [中文](https://github.com/DuckDuckStudio/GitHub-Labels-Manager/blob/main/README.md) | [English](https://github.com/DuckDuckStudio/GitHub-Labels-Manager/blob/main/other-languages/en_US/README.md)  
 
+
+> [!WARNING]  
+> This project is no longer maintained, and it is recommended to use the `gh label` command instead.  
+> See the [GitHub CLI manual](https://cli.github.com/manual) for information on this command.
+
 ## Project profile
 GLM provides the following functions:  
 - [x] Gets all the labels for a repository, stored in `labels.json` of the specified directory
 - [x] Empty the label of a repository *(token with repo permission required)*
 - [x] Set the label of a repository according to the specified **json** file *(empty the specified repository's labels before setting, requires a token with repo permission)*
 - [x] Copy the label of one repository to another repository *(empty the specified repository's labels before setting, requires a token with repo permission)*
-
-### About icon
-The current icon is for temporary use only and will be replaced if there is a formal design.  
-
-> [!TIP]
-> If you would like to design a new icon, you can send your design to <Yzcbs123@163.com>. Thank you for supporting this project!  
 
 ## Before use
 ### Python
